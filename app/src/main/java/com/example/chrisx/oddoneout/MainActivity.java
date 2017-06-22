@@ -2,12 +2,12 @@ package com.example.chrisx.oddoneout;
 
 /**
  * Organized in order of priority:
- * @TODO add tutorial ("how to play" button)
  * @TODO other game modes (1v1 maybe)
  * @TODO user preferences (night mode, fps, etc.)
  * @TODO smoother animation for game over screen (includes "New high score" notif)
  * @TODO more icons/pairs
  * @TODO organize icons
+ * @TODO update tutorial to make it look better
  * ...
  * @TODO extreme?
  */
@@ -108,18 +108,18 @@ public class MainActivity extends AppCompatActivity {
                             if (menu.equals("start")) {
                                 Paint title = newPaint(Color.BLACK);
                                 title.setTextAlign(Paint.Align.CENTER);
-                                title.setTextSize((int)(canvas.getHeight()/5.69));
-                                canvas.drawText("ODD", canvas.getWidth()/2+Math.max(startAnimation-FRAMES_PER_SECOND*6/3,0)/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), (int)(canvas.getHeight()/3.79), title);
-                                canvas.drawText("ONE", canvas.getWidth()/2+Math.max(startAnimation-FRAMES_PER_SECOND*4/3,0)/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), (int)(canvas.getHeight()/2.4), title);
-                                canvas.drawText("OUT", canvas.getWidth()/2+Math.max(startAnimation-FRAMES_PER_SECOND*2/3,0)/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), (int)(canvas.getHeight()/1.76), title);
+                                title.setTextSize(convert854(150));
+                                canvas.drawText("ODD", canvas.getWidth()/2+Math.max(startAnimation-FRAMES_PER_SECOND*6/3,0)/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), convert854(225), title);
+                                canvas.drawText("ONE", canvas.getWidth()/2+Math.max(startAnimation-FRAMES_PER_SECOND*4/3,0)/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), convert854(355), title);
+                                canvas.drawText("OUT", canvas.getWidth()/2+Math.max(startAnimation-FRAMES_PER_SECOND*2/3,0)/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), convert854(485), title);
 
-                                title.setTextSize((int)(canvas.getHeight()/15.52));
-                                canvas.drawText("start", canvas.getWidth()/2-startAnimation/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), (int)(canvas.getHeight()/1.35), title);
-                                canvas.drawText("how to play", canvas.getWidth()/2-startAnimation/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), (int)(canvas.getHeight()/1.177), title);
+                                title.setTextSize(convert854(55));
+                                canvas.drawText("start", canvas.getWidth()/2-startAnimation/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), convert854(632), title);
+                                canvas.drawText("how to play", canvas.getWidth()/2-startAnimation/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), convert854(725), title);
 
                                 if (startAnimation > 0) startAnimation--;
                             } else if (menu.equals("howtoplay")) {
-                                float textSize = canvas.getHeight() / 21;
+                                float textSize = convert854(40);
 
                                 Paint p = newPaint(Color.BLACK);
                                 p.setTextAlign(Paint.Align.CENTER);
@@ -189,17 +189,17 @@ public class MainActivity extends AppCompatActivity {
 
                                     //show current score and high score
                                     Paint scoreTitle = newPaint(Color.BLACK);
-                                    scoreTitle.setTextSize(20);
+                                    scoreTitle.setTextSize(convert854(20));
                                     scoreTitle.setTextAlign(Paint.Align.LEFT);
-                                    canvas.drawText("score", 10, 25, scoreTitle);
+                                    canvas.drawText("score", 10, convert854(25), scoreTitle);
                                     scoreTitle.setTextAlign(Paint.Align.RIGHT);
-                                    canvas.drawText("high", canvas.getWidth() - 10, 25, scoreTitle);
+                                    canvas.drawText("high", canvas.getWidth() - 10, convert854(25), scoreTitle);
                                     Paint scoreText = newPaint(Color.BLACK);
-                                    scoreText.setTextSize(30);
+                                    scoreText.setTextSize(convert854(30));
                                     scoreText.setTextAlign(Paint.Align.LEFT);
-                                    canvas.drawText(score + "", 10, 60, scoreText);
+                                    canvas.drawText(score+"", 10, convert854(60), scoreText);
                                     scoreText.setTextAlign(Paint.Align.RIGHT);
-                                    canvas.drawText(sharedPref.getInt("high_score", 0) + "", canvas.getWidth() - 10, 60, scoreText);
+                                    canvas.drawText(getHighScore()+"", canvas.getWidth() - 10, convert854(60), scoreText);
 
                                     //display row
                                     for (int i = 0; i < row.length; i++) {
@@ -218,9 +218,9 @@ public class MainActivity extends AppCompatActivity {
                                         } else {
                                             menu = "transition";
                                             transitionFrames = 0;
-                                            if (score > sharedPref.getInt("high_score", 0)) {
+                                            if (score > getHighScore()) {
                                                 isHighScore = true;
-                                                previousHigh = sharedPref.getInt("high_score", 0);
+                                                previousHigh = getHighScore();
                                                 editor.putInt("high_score", (int) score);
                                                 editor.apply();
                                             } else isHighScore = false;
@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
                                 p.setTextSize(70);
                                 canvas.drawText(score+"", canvas.getWidth()/2, canvas.getHeight()/2-5, p);
                                 if (isHighScore) canvas.drawText(previousHigh+"", canvas.getWidth()/2, canvas.getHeight()/2+110, p);
-                                else canvas.drawText(sharedPref.getInt("high_score", 0)+"", canvas.getWidth()/2, canvas.getHeight()/2+110, p);
+                                else canvas.drawText(getHighScore()+"", canvas.getWidth()/2, canvas.getHeight()/2+110, p);
 
                                 //display row
                                 for (int i = 0; i < row.length; i++) {
@@ -336,14 +336,14 @@ public class MainActivity extends AppCompatActivity {
         if (menu.equals("start") && startAnimation == 0) {
             if (action == MotionEvent.ACTION_UP) {
                 //start button
-                if (Y > (int)(canvas.getHeight()/1.48) && Y < (int)(canvas.getHeight()/1.28)) {
+                if (Y > convert854(577) && Y < convert854(667)) {
                     menu = "game";
                     frameCount = 0;
                     score = 0;
                     row = generateRow();
                 }
                 //how to play button
-                else if (Y > (int)(canvas.getHeight()/1.28) && Y < (int)(canvas.getHeight()/1.128)) {
+                else if (Y > convert854(667) && Y < convert854(757)) {
                     menu = "howtoplay";
                     tutorialFrames = 0;
                 }
@@ -370,6 +370,14 @@ public class MainActivity extends AppCompatActivity {
         p.setColor(color);
         p.setTypeface(spinnaker);
         return p;
+    }
+
+    private float convert854(float f) {
+        return canvas.getHeight() / (854 / f);
+    }
+
+    private int getHighScore() {
+        return sharedPref.getInt("high_score", 0);
     }
 
     private Icon[] generateRow() {
