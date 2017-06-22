@@ -119,37 +119,71 @@ public class MainActivity extends AppCompatActivity {
 
                                 if (startAnimation > 0) startAnimation--;
                             } else if (menu.equals("howtoplay")) {
+                                float textSize = canvas.getHeight() / 21;
+
                                 Paint p = newPaint(Color.BLACK);
                                 p.setTextAlign(Paint.Align.CENTER);
-                                p.setTextSize(40);
+                                p.setTextSize(textSize);
 
-                                //@TODO make compatible w/ diff screen sizes
                                 if (tutorialFrames == 0) {
-                                    canvas.drawText("The objective of", canvas.getWidth() / 2, 70, p);
-                                    canvas.drawText("this game is to find", canvas.getWidth() / 2, 115, p);
-                                    canvas.drawText("the \"odd one out,\"", canvas.getWidth() / 2, 160, p);
-                                    canvas.drawText("or something that is", canvas.getWidth() / 2, 205, p);
-                                    canvas.drawText("different from the", canvas.getWidth() / 2, 250, p);
-                                    canvas.drawText("others around it.", canvas.getWidth() / 2, 295, p);
+                                    String[] txt = {
+                                            "The objective of",
+                                            "this game is to find",
+                                            "the \"odd one out,\"",
+                                            "or something that is",
+                                            "different from the",
+                                            "others around it."};
+                                    for (int i = 0; i < txt.length; i++) {
+                                        canvas.drawText(txt[i], canvas.getWidth()/2, textSize*2-10 + i*(textSize+5), p);
+                                    }
                                 } else if (tutorialFrames == 1) {
-                                    canvas.drawText("There will be rows", canvas.getWidth()/2, 70, p);
-                                    canvas.drawText("of 4 icons each", canvas.getWidth()/2, 115, p);
-                                    canvas.drawText("moving down the", canvas.getWidth()/2, 160, p);
-                                    canvas.drawText("screen, gradually", canvas.getWidth()/2, 205, p);
-                                    canvas.drawText("speeding up as your", canvas.getWidth()/2, 250, p);
-                                    canvas.drawText("score increases.", canvas.getWidth()/2, 295, p);
+                                    String[] txt = {
+                                            "There will be rows",
+                                            "of 4 icons each",
+                                            "moving down the",
+                                            "screen, gradually",
+                                            "speeding up as your",
+                                            "score increases."};
+                                    for (int i = 0; i < txt.length; i++) {
+                                        canvas.drawText(txt[i], canvas.getWidth()/2, textSize*2-10 + i*(textSize+5), p);
+                                    }
+                                } else if (tutorialFrames == 2) {
+                                    String[] txt = {
+                                            "In each row, there",
+                                            "will be one icon",
+                                            "that is different",
+                                            "from the rest. Tap",
+                                            "on that icon's",
+                                            "column before the",
+                                            "row reaches the",
+                                            "bottom of the screen.",
+                                            "(Note: a new row",
+                                            "will only appear",
+                                            "after the previous",
+                                            "row has gone off",
+                                            "the screen.)"};
+                                    for (int i = 0; i < txt.length; i++) {
+                                        canvas.drawText(txt[i], canvas.getWidth()/2, textSize*2-10 + i*(textSize+5), p);
+                                    }
+                                } else if (tutorialFrames == 3) {
+                                    String[] txt = {
+                                            "As for how to play",
+                                            "the game, that's",
+                                            "about it! Good luck :)"};
+                                    for (int i = 0; i < txt.length; i++) {
+                                        canvas.drawText(txt[i], canvas.getWidth()/2, textSize*2-10 + i*(textSize+5), p);
+                                    }
                                 }
 
-                                canvas.drawText("Next", canvas.getWidth()/2, canvas.getHeight()-20, p);
-
-                                if (tutorialFrames !=  0 && tutorialFrames != 1) tutorialFrames++;
+                                if (tutorialFrames < 3) canvas.drawText("Next", canvas.getWidth()/2, canvas.getHeight()-20, p);
+                                else canvas.drawText("Menu", canvas.getWidth()/2, canvas.getHeight()-20, p);
                             } else if (menu.equals("game")) {
                                 if (!paused) {
                                     //show current column
-                                    canvas.drawRect(column * canvas.getWidth() / 4, 0, (column + 1) * canvas.getWidth() / 4, canvas.getHeight(), newPaint(Color.rgb(245, 245, 245)));
+                                    canvas.drawRect(column * canvas.getWidth()/4, 0, (column + 1) * canvas.getWidth()/4, canvas.getHeight(), newPaint(Color.rgb(245, 245, 245)));
                                     //dividing lines
                                     for (int i = 0; i < 3; i++) {
-                                        float x = canvas.getWidth() / 4 + i * canvas.getWidth() / 4;
+                                        float x = canvas.getWidth()/4 + i * canvas.getWidth()/4;
                                         canvas.drawLine(x, 0, x, canvas.getHeight(), newPaint(Color.rgb(200, 200, 200)));
                                     }
 
@@ -169,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     //display row
                                     for (int i = 0; i < row.length; i++) {
-                                        row[i].drawShape(canvas, canvas.getWidth() / 8 + canvas.getWidth() / 4 * i, rowPosition + canvas.getWidth() / 8, canvas.getWidth() / 4 / (float) Math.sqrt(2) - 10);
+                                        row[i].drawShape(canvas, canvas.getWidth()/8 + canvas.getWidth()/4 * i, rowPosition + canvas.getWidth()/8, canvas.getWidth()/4 / (float) Math.sqrt(2) - 10);
                                     }
 
                                     //move row down the canvas and adjust speed
@@ -317,7 +351,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (menu.equals("howtoplay")) {
             if (action == MotionEvent.ACTION_UP) {
                 if (Y > canvas.getHeight() - 80) {
-                    if (tutorialFrames == 0 || tutorialFrames == 1) tutorialFrames++;
+                    if (tutorialFrames < 3) tutorialFrames++;
+                    else menu = "start";
                 }
             }
         } else if (menu.equals("game")) {
