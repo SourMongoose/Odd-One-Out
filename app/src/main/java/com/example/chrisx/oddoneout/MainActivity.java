@@ -121,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawText("how to play", canvas.getWidth()/2-startAnimation/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), convert854(725), title);
 
                                 if (startAnimation > 0) startAnimation--;
+
+                                drawGear(canvas.getWidth()-40, 40, 20);
                             } else if (menu.equals("howtoplay")) {
                                 float textSize = convert854(40);
 
@@ -381,6 +383,24 @@ public class MainActivity extends AppCompatActivity {
 
     private int getHighScore() {
         return sharedPref.getInt("high_score", 0);
+    }
+
+    private void drawGear(float x, float y, float w) {
+        Paint p = newPaint(Color.BLACK);
+        p.setStrokeWidth(convert854(2));
+        p.setStyle(Paint.Style.STROKE);
+
+        for (float angle = 0; angle < 2*Math.PI; angle += Math.PI/3) {
+            canvas.drawLine(x+w*3/4*(float)Math.cos(angle+Math.PI/18), y-w*3/4*(float)Math.sin(angle+Math.PI/18),
+                    x+w*(float)Math.cos(angle+Math.PI/10), y-w*(float)Math.sin(angle+Math.PI/10), p);
+            canvas.drawLine(x+w*(float)Math.cos(angle+Math.PI/10), y-w*(float)Math.sin(angle+Math.PI/10),
+                    x+w*(float)Math.cos(angle+Math.PI*7/30), y-w*(float)Math.sin(angle+Math.PI*7/30), p);
+            canvas.drawLine(x+w*(float)Math.cos(angle+Math.PI*7/30), y-w*(float)Math.sin(angle+Math.PI*7/30),
+                    x+w*3/4*(float)Math.cos(angle+Math.PI*5/18), y-w*3/4*(float)Math.sin(angle+Math.PI*5/18), p);
+            canvas.drawLine(x+w*3/4*(float)Math.cos(angle+Math.PI*5/18), y-w*3/4*(float)Math.sin(angle+Math.PI*5/18),
+                    x+w*3/4*(float)Math.cos(angle+Math.PI*7/18), y-w*3/4*(float)Math.sin(angle+Math.PI*7/18), p);
+        }
+        canvas.drawCircle(x, y, w/2, p);
     }
 
     private Icon[] generateRow() {
