@@ -122,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
 
                                 if (startAnimation > 0) startAnimation--;
 
+                                //settings
+                                //@TODO fit in with starting animation
                                 drawGear(canvas.getWidth()-40, 40, 20);
                             } else if (menu.equals("howtoplay")) {
                                 float textSize = convert854(40);
@@ -301,6 +303,9 @@ public class MainActivity extends AppCompatActivity {
                                 box.setStyle(Paint.Style.STROKE);
                                 box.setStrokeWidth(3);
                                 canvas.drawRect(correctColumn*canvas.getWidth()/4, canvas.getHeight()-canvas.getWidth()/4, (correctColumn+1)*canvas.getWidth()/4, canvas.getHeight(), box);
+
+                                //settings
+                                drawGear(canvas.getWidth()-40, 40, 20);
 
                                 gameoverFrames++;
                             }
