@@ -121,11 +121,13 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawText("start", canvas.getWidth()/2-startAnimation/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), convert854(632), title);
                                 canvas.drawText("how to play", canvas.getWidth()/2-startAnimation/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), convert854(725), title);
 
-                                if (startAnimation > 0) startAnimation--;
-
-                                //settings
-                                //@TODO fit in with starting animation
+                                //settings icon
                                 drawGear(canvas.getWidth()-40, 40, 20);
+                                Paint cover = newPaint(Color.WHITE);
+                                cover.setAlpha((int)(255*Math.min(1, startAnimation/(FRAMES_PER_SECOND*2/3f))));
+                                canvas.drawRect(canvas.getWidth()-80, 0, canvas.getWidth(), 80, cover);
+
+                                if (startAnimation > 0) startAnimation--;
                             } else if (menu.equals("howtoplay")) {
                                 float textSize = convert854(40);
 
