@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private long frameCount = 0;
 
     private String menu = "start";
+    private String previousMenu;
 
     private long score = 0;
     private boolean isHighScore;
@@ -304,6 +305,11 @@ public class MainActivity extends AppCompatActivity {
                                 box.setStrokeWidth(3);
                                 canvas.drawRect(correctColumn*canvas.getWidth()/4, canvas.getHeight()-canvas.getWidth()/4, (correctColumn+1)*canvas.getWidth()/4, canvas.getHeight(), box);
 
+                                p.setTextSize(30);
+                                p.setAlpha((int)(255*Math.abs(Math.sin(gameoverFrames*2/180f*Math.PI))));
+                                canvas.drawText("tap anywhere", canvas.getWidth()/2, canvas.getHeight()*3/4, p);
+                                canvas.drawText("to continue", canvas.getWidth()/2, canvas.getHeight()*3/4+30, p);
+
                                 //settings
                                 drawGear(canvas.getWidth()-40, 40, 20);
 
@@ -357,6 +363,11 @@ public class MainActivity extends AppCompatActivity {
                     menu = "howtoplay";
                     tutorialFrames = 0;
                 }
+                //settings
+                else if (X > canvas.getWidth() - 40 && Y < 40) {
+                    menu = "settings";
+                    previousMenu = "start";
+                }
             }
         } else if (menu.equals("howtoplay")) {
             if (action == MotionEvent.ACTION_UP) {
@@ -368,7 +379,12 @@ public class MainActivity extends AppCompatActivity {
         } else if (menu.equals("game")) {
             column = (int) (X / (canvas.getWidth()/4));
         } else if (menu.equals("gameover")) {
-            if (action == MotionEvent.ACTION_UP) menu = "start";
+            if (action == MotionEvent.ACTION_UP) {
+                if (X > canvas.getWidth() - 40 && Y < 40) {
+                    menu = "settings";
+                    previousMenu = "gameover";
+                } else menu = "start";
+            }
         }
 
         return true;
