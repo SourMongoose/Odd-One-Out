@@ -2,8 +2,8 @@ package com.example.chrisx.oddoneout;
 
 /**
  * Organized in order of priority:
+ * @TODO be able to change user preferences
  * @TODO other game modes (1v1 maybe)
- * @TODO user preferences (night mode, fps, etc.)
  * @TODO smoother animation for game over screen (includes "New high score" notif)
  * @TODO more icons/pairs
  * @TODO organize icons
@@ -56,11 +56,10 @@ public class MainActivity extends AppCompatActivity {
     private float rowPosition;
     private int previousPair = -1;
 
-    private static final int FRAMES_PER_SECOND = 60;
-    private static final long NANOSECONDS_PER_FRAME = (long)1e9 / FRAMES_PER_SECOND;
-    private static final long MILLISECONDS_PER_FRAME = (long)1e3 / FRAMES_PER_SECOND;
+    private long nanosecondsPerFrame;
+    private long millisecondsPerFrame;
 
-    private long startAnimation = FRAMES_PER_SECOND*8/3;
+    private long startAnimation;
     private long tutorialFrames;
     private long transitionFrames;
     private long gameoverFrames;
@@ -90,8 +89,10 @@ public class MainActivity extends AppCompatActivity {
         //initializes SharedPreferences
         sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         editor = sharedPref.edit();
-        editor.putInt("high_score", 0);
-        editor.apply();
+
+        nanosecondsPerFrame = (long)1e9 / getTargetFPS();
+        millisecondsPerFrame = (long)1e3 / getTargetFPS();
+        startAnimation = getTargetFPS()*8/3;
 
         spinnaker = Typeface.createFromAsset(getAssets(), "fonts/Spinnaker-Regular.ttf");
 
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //draw loop
-                while (true) {
+                while (!menu.equals("quit")) {
                     long startTime = System.nanoTime();
 
                     handler.post(new Runnable() {
@@ -113,18 +114,18 @@ public class MainActivity extends AppCompatActivity {
                                 Paint title = newPaint(Color.BLACK);
                                 title.setTextAlign(Paint.Align.CENTER);
                                 title.setTextSize(convert854(150));
-                                canvas.drawText("ODD", canvas.getWidth()/2+Math.max(startAnimation-FRAMES_PER_SECOND*6/3,0)/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), convert854(225), title);
-                                canvas.drawText("ONE", canvas.getWidth()/2+Math.max(startAnimation-FRAMES_PER_SECOND*4/3,0)/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), convert854(355), title);
-                                canvas.drawText("OUT", canvas.getWidth()/2+Math.max(startAnimation-FRAMES_PER_SECOND*2/3,0)/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), convert854(485), title);
+                                canvas.drawText("ODD", canvas.getWidth()/2+Math.max(startAnimation-getTargetFPS()*6/3,0)/(getTargetFPS()*2/3f)*canvas.getWidth(), convert854(225), title);
+                                canvas.drawText("ONE", canvas.getWidth()/2+Math.max(startAnimation-getTargetFPS()*4/3,0)/(getTargetFPS()*2/3f)*canvas.getWidth(), convert854(355), title);
+                                canvas.drawText("OUT", canvas.getWidth()/2+Math.max(startAnimation-getTargetFPS()*2/3,0)/(getTargetFPS()*2/3f)*canvas.getWidth(), convert854(485), title);
 
                                 title.setTextSize(convert854(55));
-                                canvas.drawText("start", canvas.getWidth()/2-startAnimation/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), convert854(632), title);
-                                canvas.drawText("how to play", canvas.getWidth()/2-startAnimation/(FRAMES_PER_SECOND*2/3f)*canvas.getWidth(), convert854(725), title);
+                                canvas.drawText("start", canvas.getWidth()/2-startAnimation/(getTargetFPS()*2/3f)*canvas.getWidth(), convert854(632), title);
+                                canvas.drawText("how to play", canvas.getWidth()/2-startAnimation/(getTargetFPS()*2/3f)*canvas.getWidth(), convert854(725), title);
 
                                 //settings icon
                                 drawGear(canvas.getWidth()-40, 40, 20);
                                 Paint cover = newPaint(Color.WHITE);
-                                cover.setAlpha((int)(255*Math.min(1, startAnimation/(FRAMES_PER_SECOND*2/3f))));
+                                cover.setAlpha((int)(255*Math.min(1, startAnimation/(getTargetFPS()*2/3f))));
                                 canvas.drawRect(canvas.getWidth()-80, 0, canvas.getWidth(), 80, cover);
 
                                 if (startAnimation > 0) startAnimation--;
@@ -187,6 +188,40 @@ public class MainActivity extends AppCompatActivity {
 
                                 if (tutorialFrames < 3) canvas.drawText("Next", canvas.getWidth()/2, canvas.getHeight()-20, p);
                                 else canvas.drawText("Menu", canvas.getWidth()/2, canvas.getHeight()-20, p);
+                            } else if (menu.equals("settings")) {
+                                Paint titleText = newPaint(Color.BLACK);
+                                titleText.setTextAlign(Paint.Align.CENTER);
+                                titleText.setTextSize(convert854(50));
+                                canvas.drawText("settings", canvas.getWidth()/2, convert854(75), titleText);
+
+                                Paint categoryText = newPaint(Color.BLACK);
+                                categoryText.setTextSize(convert854(40));
+                                Paint choiceText = newPaint(Color.BLACK);
+                                choiceText.setTextAlign(Paint.Align.CENTER);
+                                choiceText.setTextSize(convert854(35));
+                                Paint boxPaint = newPaint(Color.BLACK);
+                                boxPaint.setStyle(Paint.Style.STROKE);
+                                boxPaint.setStrokeWidth(convert854(2));
+
+                                //change fps
+                                canvas.drawText("target FPS:", convert854(20), convert854(200), categoryText);
+                                canvas.drawText("30", canvas.getWidth()/8, convert854(275), choiceText);
+                                canvas.drawText("45", canvas.getWidth()*3/8, convert854(275), choiceText);
+                                canvas.drawText("60", canvas.getWidth()*5/8, convert854(275), choiceText);
+                                if (getTargetFPS() == 30) canvas.drawRect(convert854(20), convert854(230), canvas.getWidth()/4-convert854(20), convert854(290), boxPaint);
+                                else if (getTargetFPS() == 45) canvas.drawRect(canvas.getWidth()/4+convert854(20), convert854(230), canvas.getWidth()*2/4-convert854(20), convert854(290), boxPaint);
+                                else if (getTargetFPS() == 60) canvas.drawRect(canvas.getWidth()*2/4+convert854(20), convert854(230), canvas.getWidth()*3/4-convert854(20), convert854(290), boxPaint);
+
+                                //equivalent of day/night mode
+                                canvas.drawText("invert colors:", convert854(20), convert854(400), categoryText);
+                                canvas.drawText("on", canvas.getWidth()/8, convert854(475), choiceText);
+                                canvas.drawText("off", canvas.getWidth()*3/8, convert854(475), choiceText);
+                                if (getInvertColors().equals("on")) canvas.drawRect(convert854(20), convert854(430), canvas.getWidth()/4-convert854(20), convert854(490), boxPaint);
+                                else if (getInvertColors().equals("off")) canvas.drawRect(canvas.getWidth()/4+convert854(20), convert854(430), canvas.getWidth()*2/4-convert854(20), convert854(490), boxPaint);
+
+                                //back button
+                                Icon backButton = new Icon(5, 270);
+                                backButton.drawShape(canvas, 60, canvas.getHeight()-40, 60);
                             } else if (menu.equals("game")) {
                                 if (!paused) {
                                     //show current column
@@ -218,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     //move row down the canvas and adjust speed
                                     rowPosition += speed;
-                                    speed = canvas.getHeight() / Math.max(2.5f - score / 30.f, 1) / FRAMES_PER_SECOND;
+                                    speed = canvas.getHeight() / Math.max(2.5f - score / 30.f, 1) / getTargetFPS();
 
                                     //check if selected column is correct
                                     if (rowPosition > canvas.getHeight()) {
@@ -238,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                             } else if (menu.equals("transition")) {
-                                int alpha = 255 - (int)Math.max(255*(transitionFrames-1.5*FRAMES_PER_SECOND)/(0.5*FRAMES_PER_SECOND), 0);
+                                int alpha = 255 - (int)Math.max(255*(transitionFrames-1.5*getTargetFPS())/(0.5*getTargetFPS()), 0);
                                 //show current column
                                 canvas.drawRect(column*canvas.getWidth()/4, 0, (column+1)*canvas.getWidth()/4, canvas.getHeight(), newPaint(Color.argb(alpha,245,245,245)));
                                 //dividing lines
@@ -260,10 +295,10 @@ public class MainActivity extends AppCompatActivity {
 
                                 //move row back up to visible screen
                                 if (rowPosition > canvas.getHeight()-canvas.getWidth()/4) {
-                                    rowPosition -= canvas.getHeight()/3/FRAMES_PER_SECOND;
+                                    rowPosition -= canvas.getHeight()/3/getTargetFPS();
                                 }
 
-                                if (transitionFrames < 2*FRAMES_PER_SECOND) transitionFrames++;
+                                if (transitionFrames < 2*getTargetFPS()) transitionFrames++;
                                 else {
                                     menu = "gameover";
                                     gameoverFrames = 0;
@@ -283,8 +318,8 @@ public class MainActivity extends AppCompatActivity {
 
                                     Paint border = newPaint(Color.BLACK);
                                     for (int i = -100; i < canvas.getWidth()+100; i += 50) {
-                                        canvas.drawCircle(i-((float)gameoverFrames/FRAMES_PER_SECOND*100%50), canvas.getHeight()/4-80, 5, border);
-                                        canvas.drawCircle(i+((float)gameoverFrames/FRAMES_PER_SECOND*100%50), canvas.getHeight()/4+45, 5, border);
+                                        canvas.drawCircle(i-((float)gameoverFrames/getTargetFPS()*100%50), canvas.getHeight()/4-80, 5, border);
+                                        canvas.drawCircle(i+((float)gameoverFrames/getTargetFPS()*100%50), canvas.getHeight()/4+45, 5, border);
                                     }
                                 }
 
@@ -326,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
                     frameCount++;
 
                     //wait until frame is done
-                    while (System.nanoTime() - startTime < NANOSECONDS_PER_FRAME);
+                    while (System.nanoTime() - startTime < nanosecondsPerFrame);
                 }
             }
         }).start();
@@ -378,6 +413,12 @@ public class MainActivity extends AppCompatActivity {
                     else menu = "start";
                 }
             }
+        } else if (menu.equals("settings")) {
+            if (action == MotionEvent.ACTION_UP) {
+                if (X < 120 && Y > canvas.getHeight() - 80) {
+                    menu = previousMenu;
+                }
+            }
         } else if (menu.equals("game")) {
             column = (int) (X / (canvas.getWidth()/4));
         } else if (menu.equals("gameover")) {
@@ -407,6 +448,14 @@ public class MainActivity extends AppCompatActivity {
     private int getHighScore() {
         return sharedPref.getInt("high_score", 0);
     }
+    
+    private int getTargetFPS() {
+        return sharedPref.getInt("target_fps", 60);
+    }
+    
+    private String getInvertColors() {
+        return sharedPref.getString("invert_colors", "off");
+    }
 
     private void drawGear(float x, float y, float w) {
         Paint p = newPaint(Color.BLACK);
@@ -430,7 +479,7 @@ public class MainActivity extends AppCompatActivity {
         rowPosition = -canvas.getWidth()/4;
         correctColumn = (int)(Math.random()*4);
 
-        /**
+        /*
          * Icon table (for reference):
          * -----------
          * 0  - circle
