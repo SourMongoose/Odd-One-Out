@@ -364,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
                     tutorialFrames = 0;
                 }
                 //settings
-                else if (X > canvas.getWidth() - 40 && Y < 40) {
+                else if (X > canvas.getWidth() - 80 && Y < 80) {
                     menu = "settings";
                     previousMenu = "start";
                 }
@@ -380,7 +380,7 @@ public class MainActivity extends AppCompatActivity {
             column = (int) (X / (canvas.getWidth()/4));
         } else if (menu.equals("gameover")) {
             if (action == MotionEvent.ACTION_UP) {
-                if (X > canvas.getWidth() - 40 && Y < 40) {
+                if (X > canvas.getWidth() - 80 && Y < 80) {
                     menu = "settings";
                     previousMenu = "gameover";
                 } else menu = "start";
