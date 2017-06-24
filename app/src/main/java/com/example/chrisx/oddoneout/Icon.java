@@ -43,16 +43,16 @@ public class Icon {
     }
 
     //draws the icon within a square of center (x,y) and side length w
-    public void drawShape(Canvas c, float x, float y, float w) {
+    public void drawShape(Canvas c, float x, float y, float w, boolean inverted) {
         float strokeWidth = c.getWidth()/240;
 
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
-        p.setColor(Color.BLACK);
+        p.setColor(inverted ? Color.WHITE : Color.BLACK);
         p.setStrokeWidth(strokeWidth);
         p.setStyle(Paint.Style.STROKE);
 
         Paint p2 = new Paint(Paint.ANTI_ALIAS_FLAG);
-        p.setColor(Color.BLACK);
+        p2.setColor(inverted ? Color.WHITE : Color.BLACK);
 
         c.save();
         c.translate(x, y);

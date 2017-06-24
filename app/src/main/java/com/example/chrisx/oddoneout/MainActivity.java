@@ -108,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             //white background
-                            canvas.drawColor(Color.WHITE);
+                            if (getInvertColors().equals("on")) canvas.drawColor(Color.BLACK);
+                            else canvas.drawColor(Color.WHITE);
 
                             if (menu.equals("start")) {
                                 Paint title = newPaint(Color.BLACK);
@@ -221,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 //back button
                                 Icon backButton = new Icon(5, 270);
-                                backButton.drawShape(canvas, 60, canvas.getHeight()-40, 60);
+                                backButton.drawShape(canvas, 60, canvas.getHeight()-40, 60, getInvertColors().equals("on"));
                             } else if (menu.equals("game")) {
                                 if (!paused) {
                                     //show current column
@@ -248,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     //display row
                                     for (int i = 0; i < row.length; i++) {
-                                        row[i].drawShape(canvas, canvas.getWidth()/8 + canvas.getWidth()/4 * i, rowPosition + canvas.getWidth()/8, canvas.getWidth()/4 / (float) Math.sqrt(2) - 10);
+                                        row[i].drawShape(canvas, canvas.getWidth()/8 + canvas.getWidth()/4 * i, rowPosition + canvas.getWidth()/8, canvas.getWidth()/4 / (float) Math.sqrt(2) - 10, getInvertColors().equals("on"));
                                     }
 
                                     //move row down the canvas and adjust speed
@@ -284,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 //display row
                                 for (int i = 0; i < row.length; i++) {
-                                    row[i].drawShape(canvas, canvas.getWidth()/8+canvas.getWidth()/4*i, rowPosition+canvas.getWidth()/8, canvas.getWidth()/4/(float)Math.sqrt(2)-10);
+                                    row[i].drawShape(canvas, canvas.getWidth()/8+canvas.getWidth()/4*i, rowPosition+canvas.getWidth()/8, canvas.getWidth()/4/(float)Math.sqrt(2)-10, getInvertColors().equals("on"));
                                 }
                                 //box the correct column
                                 Paint box = newPaint(Color.BLACK);
@@ -296,6 +297,7 @@ public class MainActivity extends AppCompatActivity {
                                 //move row back up to visible screen
                                 if (rowPosition > canvas.getHeight()-canvas.getWidth()/4) {
                                     rowPosition -= canvas.getHeight()/3/getTargetFPS();
+                                    rowPosition = Math.max(rowPosition, canvas.getHeight()-canvas.getWidth()/4);
                                 }
 
                                 if (transitionFrames < 2*getTargetFPS()) transitionFrames++;
@@ -334,7 +336,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 //display row
                                 for (int i = 0; i < row.length; i++) {
-                                    row[i].drawShape(canvas, canvas.getWidth()/8+canvas.getWidth()/4*i, rowPosition+canvas.getWidth()/8, canvas.getWidth()/4/(float)Math.sqrt(2)-10);
+                                    row[i].drawShape(canvas, canvas.getWidth()/8+canvas.getWidth()/4*i, rowPosition+canvas.getWidth()/8, canvas.getWidth()/4/(float)Math.sqrt(2)-10, getInvertColors().equals("on"));
                                 }
                                 //box the correct column
                                 Paint box = newPaint(Color.BLACK);
@@ -343,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawRect(correctColumn*canvas.getWidth()/4, canvas.getHeight()-canvas.getWidth()/4, (correctColumn+1)*canvas.getWidth()/4, canvas.getHeight(), box);
 
                                 p.setTextSize(30);
-                                p.setAlpha((int)(255*Math.abs(Math.sin(gameoverFrames*2/180f*Math.PI))));
+                                p.setAlpha((int)(255*Math.abs(Math.sin((float)gameoverFrames/getTargetFPS()*60*2/180*Math.PI))));
                                 canvas.drawText("tap anywhere", canvas.getWidth()/2, canvas.getHeight()*3/4, p);
                                 canvas.drawText("to continue", canvas.getWidth()/2, canvas.getHeight()*3/4+30, p);
 
@@ -419,6 +421,21 @@ public class MainActivity extends AppCompatActivity {
                     menu = previousMenu;
                 }
             }
+            if (action == MotionEvent.ACTION_DOWN) {
+                if (Y > convert854(230) && Y < convert854(290)) {
+                    if (X < canvas.getWidth()/4) editor.putInt("target_fps", 30);
+                    else if (X < canvas.getWidth()*2/4) editor.putInt("target_fps", 45);
+                    else if (X < canvas.getWidth()*3/4) editor.putInt("target_fps", 60);
+                    editor.apply();
+
+                    nanosecondsPerFrame = (long)1e9 / getTargetFPS();
+                    millisecondsPerFrame = (long)1e3 / getTargetFPS();
+                } else if (Y > convert854(430) && Y < convert854(490)) {
+                    if (X < canvas.getWidth()/4) editor.putString("invert_colors", "on");
+                    else if (X < canvas.getWidth()*2/4) editor.putString("invert_colors", "off");
+                    editor.apply();
+                }
+            }
         } else if (menu.equals("game")) {
             column = (int) (X / (canvas.getWidth()/4));
         } else if (menu.equals("gameover")) {
@@ -438,6 +455,14 @@ public class MainActivity extends AppCompatActivity {
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
         p.setColor(color);
         p.setTypeface(spinnaker);
+
+        if (getInvertColors().equals("on")) {
+            p.setARGB(p.getAlpha(),
+                    255 - ((p.getColor() >> 16) & 0xff),
+                    255 - ((p.getColor() >> 8) & 0xff),
+                    255 - (p.getColor() & 0xff));
+        }
+
         return p;
     }
 
