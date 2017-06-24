@@ -280,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
                                 //show current column
                                 canvas.drawRect(column * canvas.getWidth()/4, 0, (column + 1) * canvas.getWidth()/4, canvas.getHeight(),
                                         newPaint(getInvertColors().equals("off") ? Color.argb(alpha,245,245,245) : Color.argb(alpha,200,200,200)));//dividing lines
+                                //dividing lines
                                 for (int i = 0; i < 3; i++) {
                                     float x = canvas.getWidth()/4 + i * canvas.getWidth()/4;
                                     canvas.drawLine(x, 0, x, canvas.getHeight(),
