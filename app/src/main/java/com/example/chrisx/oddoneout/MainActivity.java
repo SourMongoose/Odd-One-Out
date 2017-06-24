@@ -226,11 +226,13 @@ public class MainActivity extends AppCompatActivity {
                             } else if (menu.equals("game")) {
                                 if (!paused) {
                                     //show current column
-                                    canvas.drawRect(column * canvas.getWidth()/4, 0, (column + 1) * canvas.getWidth()/4, canvas.getHeight(), newPaint(Color.rgb(245, 245, 245)));
+                                    canvas.drawRect(column * canvas.getWidth()/4, 0, (column + 1) * canvas.getWidth()/4, canvas.getHeight(),
+                                            newPaint(getInvertColors().equals("off") ? Color.rgb(245,245,245) : Color.rgb(220,220,220)));
                                     //dividing lines
                                     for (int i = 0; i < 3; i++) {
                                         float x = canvas.getWidth()/4 + i * canvas.getWidth()/4;
-                                        canvas.drawLine(x, 0, x, canvas.getHeight(), newPaint(Color.rgb(200, 200, 200)));
+                                        canvas.drawLine(x, 0, x, canvas.getHeight(),
+                                                newPaint(getInvertColors().equals("off") ? Color.rgb(200,200,200) : Color.rgb(150,150,150)));
                                     }
 
                                     //show current score and high score
@@ -276,11 +278,12 @@ public class MainActivity extends AppCompatActivity {
                             } else if (menu.equals("transition")) {
                                 int alpha = 255 - (int)Math.max(255*(transitionFrames-1.5*getTargetFPS())/(0.5*getTargetFPS()), 0);
                                 //show current column
-                                canvas.drawRect(column*canvas.getWidth()/4, 0, (column+1)*canvas.getWidth()/4, canvas.getHeight(), newPaint(Color.argb(alpha,245,245,245)));
-                                //dividing lines
+                                canvas.drawRect(column * canvas.getWidth()/4, 0, (column + 1) * canvas.getWidth()/4, canvas.getHeight(),
+                                        newPaint(getInvertColors().equals("off") ? Color.argb(alpha,245,245,245) : Color.argb(alpha,200,200,200)));//dividing lines
                                 for (int i = 0; i < 3; i++) {
                                     float x = canvas.getWidth()/4 + i * canvas.getWidth()/4;
-                                    canvas.drawLine(x, 0, x, canvas.getHeight(), newPaint(Color.argb(alpha,200,200,200)));
+                                    canvas.drawLine(x, 0, x, canvas.getHeight(),
+                                            newPaint(getInvertColors().equals("off") ? Color.argb(alpha,200,200,200) : Color.argb(alpha,150,150,150)));
                                 }
 
                                 //display row
