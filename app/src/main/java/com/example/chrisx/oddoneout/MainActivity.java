@@ -63,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
     private long transitionFrames;
     private long gameoverFrames;
 
+    //settings
+    private static final float TARGET_FPS_HEIGHT = 175;
+    private static final float INVERT_COLORS_HEIGHT = 350;
+    private static final float SHOW_1V1_HEIGHT = 525;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -204,20 +209,27 @@ public class MainActivity extends AppCompatActivity {
                                 boxPaint.setStrokeWidth(convert854(2));
 
                                 //change fps
-                                canvas.drawText("target FPS:", convert854(20), convert854(200), categoryText);
-                                canvas.drawText("30", canvas.getWidth()/8, convert854(275), choiceText);
-                                canvas.drawText("45", canvas.getWidth()*3/8, convert854(275), choiceText);
-                                canvas.drawText("60", canvas.getWidth()*5/8, convert854(275), choiceText);
-                                if (getTargetFPS() == 30) canvas.drawRect(convert854(20), convert854(230), canvas.getWidth()/4-convert854(20), convert854(290), boxPaint);
-                                else if (getTargetFPS() == 45) canvas.drawRect(canvas.getWidth()/4+convert854(20), convert854(230), canvas.getWidth()*2/4-convert854(20), convert854(290), boxPaint);
-                                else if (getTargetFPS() == 60) canvas.drawRect(canvas.getWidth()*2/4+convert854(20), convert854(230), canvas.getWidth()*3/4-convert854(20), convert854(290), boxPaint);
+                                canvas.drawText("target FPS:", convert854(20), convert854(TARGET_FPS_HEIGHT), categoryText);
+                                canvas.drawText("30", canvas.getWidth()/8, convert854(TARGET_FPS_HEIGHT+75), choiceText);
+                                canvas.drawText("45", canvas.getWidth()*3/8, convert854(TARGET_FPS_HEIGHT+75), choiceText);
+                                canvas.drawText("60", canvas.getWidth()*5/8, convert854(TARGET_FPS_HEIGHT+75), choiceText);
+                                if (getTargetFPS() == 30) canvas.drawRect(convert854(20), convert854(TARGET_FPS_HEIGHT+30), canvas.getWidth()/4-convert854(20), convert854(TARGET_FPS_HEIGHT+90), boxPaint);
+                                else if (getTargetFPS() == 45) canvas.drawRect(canvas.getWidth()/4+convert854(20), convert854(TARGET_FPS_HEIGHT+30), canvas.getWidth()*2/4-convert854(20), convert854(TARGET_FPS_HEIGHT+90), boxPaint);
+                                else if (getTargetFPS() == 60) canvas.drawRect(canvas.getWidth()*2/4+convert854(20), convert854(TARGET_FPS_HEIGHT+30), canvas.getWidth()*3/4-convert854(20), convert854(TARGET_FPS_HEIGHT+90), boxPaint);
 
                                 //equivalent of day/night mode
-                                canvas.drawText("invert colors:", convert854(20), convert854(400), categoryText);
-                                canvas.drawText("on", canvas.getWidth()/8, convert854(475), choiceText);
-                                canvas.drawText("off", canvas.getWidth()*3/8, convert854(475), choiceText);
-                                if (getInvertColors().equals("on")) canvas.drawRect(convert854(20), convert854(430), canvas.getWidth()/4-convert854(20), convert854(490), boxPaint);
-                                else if (getInvertColors().equals("off")) canvas.drawRect(canvas.getWidth()/4+convert854(20), convert854(430), canvas.getWidth()*2/4-convert854(20), convert854(490), boxPaint);
+                                canvas.drawText("invert colors:", convert854(20), convert854(INVERT_COLORS_HEIGHT), categoryText);
+                                canvas.drawText("on", canvas.getWidth()/8, convert854(INVERT_COLORS_HEIGHT+75), choiceText);
+                                canvas.drawText("off", canvas.getWidth()*3/8, convert854(INVERT_COLORS_HEIGHT+75), choiceText);
+                                if (getInvertColors().equals("on")) canvas.drawRect(convert854(20), convert854(INVERT_COLORS_HEIGHT+30), canvas.getWidth()/4-convert854(20), convert854(INVERT_COLORS_HEIGHT+90), boxPaint);
+                                else if (getInvertColors().equals("off")) canvas.drawRect(canvas.getWidth()/4+convert854(20), convert854(INVERT_COLORS_HEIGHT+30), canvas.getWidth()*2/4-convert854(20), convert854(INVERT_COLORS_HEIGHT+90), boxPaint);
+
+                                //show 1v1 mode as an option
+                                canvas.drawText("show 1v1 mode:", convert854(20), convert854(SHOW_1V1_HEIGHT), categoryText);
+                                canvas.drawText("on", canvas.getWidth()/8, convert854(SHOW_1V1_HEIGHT+75), choiceText);
+                                canvas.drawText("off", canvas.getWidth()*3/8, convert854(SHOW_1V1_HEIGHT+75), choiceText);
+                                if (getShow1v1().equals("on")) canvas.drawRect(convert854(20), convert854(SHOW_1V1_HEIGHT+30), canvas.getWidth()/4-convert854(20), convert854(SHOW_1V1_HEIGHT+90), boxPaint);
+                                else if (getShow1v1().equals("off")) canvas.drawRect(canvas.getWidth()/4+convert854(20), convert854(SHOW_1V1_HEIGHT+30), canvas.getWidth()*2/4-convert854(20), convert854(SHOW_1V1_HEIGHT+90), boxPaint);
 
                                 //back button
                                 Icon backButton = new Icon(5, 270);
@@ -425,7 +437,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             if (action == MotionEvent.ACTION_DOWN) {
-                if (Y > convert854(230) && Y < convert854(290)) {
+                if (Y > convert854(TARGET_FPS_HEIGHT+30) && Y < convert854(TARGET_FPS_HEIGHT+90)) {
                     if (X < canvas.getWidth()/4) editor.putInt("target_fps", 30);
                     else if (X < canvas.getWidth()*2/4) editor.putInt("target_fps", 45);
                     else if (X < canvas.getWidth()*3/4) editor.putInt("target_fps", 60);
@@ -433,9 +445,13 @@ public class MainActivity extends AppCompatActivity {
 
                     nanosecondsPerFrame = (long)1e9 / getTargetFPS();
                     millisecondsPerFrame = (long)1e3 / getTargetFPS();
-                } else if (Y > convert854(430) && Y < convert854(490)) {
+                } else if (Y > convert854(INVERT_COLORS_HEIGHT+30) && Y < convert854(INVERT_COLORS_HEIGHT+90)) {
                     if (X < canvas.getWidth()/4) editor.putString("invert_colors", "on");
                     else if (X < canvas.getWidth()*2/4) editor.putString("invert_colors", "off");
+                    editor.apply();
+                } else if (Y > convert854(SHOW_1V1_HEIGHT+30) && Y < convert854(SHOW_1V1_HEIGHT+90)) {
+                    if (X < canvas.getWidth()/4) editor.putString("show_1v1", "on");
+                    else if (X < canvas.getWidth()*2/4) editor.putString("show_1v1", "off");
                     editor.apply();
                 }
             }
@@ -483,6 +499,10 @@ public class MainActivity extends AppCompatActivity {
     
     private String getInvertColors() {
         return sharedPref.getString("invert_colors", "off");
+    }
+
+    private String getShow1v1() {
+        return sharedPref.getString("show_1v1", "off");
     }
 
     private void drawGear(float x, float y, float w) {
