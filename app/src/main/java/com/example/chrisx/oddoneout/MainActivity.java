@@ -234,6 +234,15 @@ public class MainActivity extends AppCompatActivity {
                                 //back button
                                 Icon backButton = new Icon(5, 270);
                                 backButton.drawShape(canvas, 60, canvas.getHeight()-40, 60, getInvertColors().equals("on"));
+                            } else if (menu.equals("mode")){
+                                Paint modeText = newPaint(Color.BLACK);
+                                modeText.setTextAlign(Paint.Align.CENTER);
+                                modeText.setTextSize(canvas.getHeight()/4);
+
+                                canvas.drawText("1P", canvas.getWidth()/2, canvas.getHeight()/4-(modeText.ascent()+modeText.descent())/2, modeText);
+                                canvas.drawText("2P", canvas.getWidth()/2, canvas.getHeight()*3/4-(modeText.ascent()+modeText.descent())/2, modeText);
+
+                                canvas.drawLine(canvas.getWidth()/10, canvas.getHeight()/2, canvas.getWidth()*9/10, canvas.getHeight()/2, modeText);
                             } else if (menu.equals("game")) {
                                 if (!paused) {
                                     //show current column
@@ -407,10 +416,14 @@ public class MainActivity extends AppCompatActivity {
             if (action == MotionEvent.ACTION_UP) {
                 //start button
                 if (Y > convert854(577) && Y < convert854(667)) {
-                    menu = "game";
-                    frameCount = 0;
-                    score = 0;
-                    row = generateRow();
+                    if (getShow1v1().equals("off")) {
+                        menu = "game";
+                        frameCount = 0;
+                        score = 0;
+                        row = generateRow();
+                    } else {
+                        menu = "mode";
+                    }
                 }
                 //how to play button
                 else if (Y > convert854(667) && Y < convert854(757)) {
@@ -453,6 +466,19 @@ public class MainActivity extends AppCompatActivity {
                     if (X < canvas.getWidth()/4) editor.putString("show_1v1", "on");
                     else if (X < canvas.getWidth()*2/4) editor.putString("show_1v1", "off");
                     editor.apply();
+                }
+            }
+        } else if (menu.equals("mode")){
+            if (action == MotionEvent.ACTION_DOWN) {
+                if (Y < canvas.getHeight()/2) {
+                    //singleplayer
+                    menu = "game";
+                    frameCount = 0;
+                    score = 0;
+                    row = generateRow();
+                } else {
+                    //1v1
+
                 }
             }
         } else if (menu.equals("game")) {
