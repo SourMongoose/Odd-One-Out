@@ -2,7 +2,6 @@ package com.example.chrisx.oddoneout;
 
 /**
  * Organized in order of priority:
- * @TODO be able to change user preferences
  * @TODO other game modes (1v1 maybe)
  * @TODO smoother animation for game over screen (includes "New high score" notif)
  * @TODO more icons/pairs
@@ -544,10 +543,16 @@ public class MainActivity extends AppCompatActivity {
         int[][][] mediumPairs = {{{14},{15}}, {{16},{17}}, {{5,90},{5,270}},
                 {{14},{14,90}}, {{15},{15,90}}, {{9},{19}}, {{10},{20}}, {{11},{21}},
                 {{12},{22}}, {{24},{25}}, {{24,90},{25,90}}};
-        int[][][] hardPairs = {{{3,0,-5},{3,0,5}}, {{4,0,-5},{4,0,5}}, {{5,0,-5},{5,0,5}},
-                {{8,0,-5},{8,0,5}}, {{13,0,-5},{13,0,5}}, {{14,0,-5},{14,0,5}}, {{15,0,-5},{15,0,5}},
-                {{16,0,-5},{16,0,5}}, {{17,0,-5},{17,0,5}}, {{18,0,-5},{18,0,5}}, {{5,0,5},{5,180,5}}};
+        int[][][] hardPairs = {{{3,0,-1},{3,0,1}}, {{4,0,-1},{4,0,1}}, {{5,0,-1},{5,0,1}},
+                {{8,0,-1},{8,0,1}}, {{13,0,-1},{13,0,1}}, {{14,0,-1},{14,0,1}}, {{15,0,-1},{15,0,1}},
+                {{16,0,-1},{16,0,1}}, {{17,0,-1},{17,0,1}}, {{18,0,-1},{18,0,1}}, {{5,0,1},{5,180,1}}};
         int[][][] hardMirror = {{{9},{19}}, {{10},{20}}, {{11},{21}}, {{12},{22}}};
+
+        //adjust icon rotational speed to selected fps
+        int rotateSpeed = 316 / getTargetFPS();
+        for (int pair = 0; pair < hardPairs.length; pair++)
+            for (int single = 0; single < 2; single++)
+                if (hardPairs[pair][single].length > 2) hardPairs[pair][single][2] *= rotateSpeed;
 
         Icon[] output = new Icon[4];
         if (score < 4) {
