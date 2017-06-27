@@ -2,7 +2,7 @@ package com.example.chrisx.oddoneout;
 
 /**
  * Organized in order of priority:
- * @TODO other game modes (1v1 maybe)
+ * @TODO fix multitouch bug in 2P mode
  * @TODO smoother animation for game over screen (includes "New high score" notif)
  * @TODO more icons/pairs
  * @TODO organize icons
@@ -316,7 +316,22 @@ public class MainActivity extends AppCompatActivity {
                             } else if (menu.equals("2P")) {
                                 if (!paused) {
                                     if (p1_ready && p2_ready) {
+                                        //show current columns
+                                        canvas.drawRect(p1_column * canvas.getWidth()/4, canvas.getHeight()/2, (p1_column + 1) * canvas.getWidth()/4, canvas.getHeight(),
+                                                newPaint(getInvertColors().equals("off") ? Color.rgb(245,245,245) : Color.rgb(220,220,220)));
+                                        canvas.drawRect(p2_column * canvas.getWidth()/4, 0, (p2_column + 1) * canvas.getWidth()/4, canvas.getHeight()/2,
+                                                newPaint(getInvertColors().equals("off") ? Color.rgb(245,245,245) : Color.rgb(220,220,220)));
+                                        //dividing lines
+                                        for (int i = 0; i < 3; i++) {
+                                            float x = canvas.getWidth()/4 + i * canvas.getWidth()/4;
+                                            canvas.drawLine(x, 0, x, canvas.getHeight(),
+                                                    newPaint(getInvertColors().equals("off") ? Color.rgb(200,200,200) : Color.rgb(150,150,150)));
+                                        }
 
+                                        //middle bar
+                                        canvas.drawRect(-5, canvas.getHeight()/2-canvas.getWidth()/8, canvas.getWidth()+5, canvas.getHeight()/2+canvas.getWidth()/8, newPaint(Color.WHITE));
+                                        canvas.drawLine(-5, canvas.getHeight()/2-canvas.getWidth()/8, canvas.getWidth()+5, canvas.getHeight()/2-canvas.getWidth()/8, newPaint(Color.BLACK));
+                                        canvas.drawLine(-5, canvas.getHeight()/2+canvas.getWidth()/8, canvas.getWidth()+5, canvas.getHeight()/2+canvas.getWidth()/8, newPaint(Color.BLACK));
                                     } else {
                                         Paint readyText = newPaint(Color.BLACK);
                                         readyText.setTextAlign(Paint.Align.CENTER);
@@ -452,8 +467,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     //handles touch events
     public boolean onTouchEvent(MotionEvent event) {
-        float X = event.getX();
-        float Y = event.getY();
+        float X = event.getX(event.getActionIndex());
+        float Y = event.getY(event.getActionIndex());
         int action = event.getAction();
 
         if (menu.equals("start") && startAnimation == 0) {
@@ -530,7 +545,7 @@ public class MainActivity extends AppCompatActivity {
             column = (int) (X / (canvas.getWidth()/4));
         } else if (menu.equals("2P")) {
             if (p1_ready && p2_ready) {
-                if (Y > canvas.getHeight()) p1_column = (int) (X / (canvas.getWidth()/4));
+                if (Y > canvas.getHeight()/2) p1_column = (int) (X / (canvas.getWidth()/4));
                 else p2_column = (int) (X / (canvas.getWidth()/4));
             } else {
                 if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
