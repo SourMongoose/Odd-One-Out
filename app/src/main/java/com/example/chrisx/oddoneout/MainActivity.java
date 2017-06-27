@@ -66,8 +66,6 @@ public class MainActivity extends AppCompatActivity {
     private int p2_column;
     private int p1_correctColumn;
     private int p2_correctColumn;
-    private float p1_rowPosition;
-    private float p2_rowPosition;
     private int p1_previousPair = -1;
     private int p2_previousPair = -1;
 
@@ -318,13 +316,42 @@ public class MainActivity extends AppCompatActivity {
                                         //show current columns
                                         canvas.drawRect(p1_column * canvas.getWidth()/4, canvas.getHeight()/2, (p1_column + 1) * canvas.getWidth()/4, canvas.getHeight(),
                                                 newPaint(getInvertColors().equals("off") ? Color.rgb(245,245,245) : Color.rgb(220,220,220)));
-                                        canvas.drawRect(p2_column * canvas.getWidth()/4, 0, (p2_column + 1) * canvas.getWidth()/4, canvas.getHeight()/2,
+                                        canvas.drawRect((3-p2_column) * canvas.getWidth()/4, 0, (3-p2_column + 1) * canvas.getWidth()/4, canvas.getHeight()/2,
                                                 newPaint(getInvertColors().equals("off") ? Color.rgb(245,245,245) : Color.rgb(220,220,220)));
                                         //dividing lines
                                         for (int i = 0; i < 3; i++) {
                                             float x = canvas.getWidth()/4 + i * canvas.getWidth()/4;
                                             canvas.drawLine(x, 0, x, canvas.getHeight(),
                                                     newPaint(getInvertColors().equals("off") ? Color.rgb(200,200,200) : Color.rgb(150,150,150)));
+                                        }
+
+                                        //display rows
+                                        for (int i = 0; i < p1_row.length; i++) {
+                                            p1_row[i].drawShape(canvas, canvas.getWidth()/8 + canvas.getWidth()/4 * i, rowPosition + canvas.getWidth()/8, canvas.getWidth()/4 / (float) Math.sqrt(2) - 10, getInvertColors().equals("on"));
+                                        }
+                                        canvas.save();
+                                        canvas.rotate(180);
+                                        canvas.translate(-canvas.getWidth(), -canvas.getHeight());
+                                        for (int i = 0; i < p2_row.length; i++) {
+                                            p2_row[i].drawShape(canvas, canvas.getWidth() / 8 + canvas.getWidth() / 4 * i, rowPosition + canvas.getWidth() / 8, canvas.getWidth() / 4 / (float) Math.sqrt(2) - 10, getInvertColors().equals("on"));
+                                        }
+                                        canvas.restore();
+
+                                        //move rows up/down the canvas and adjust speed
+                                        speed = canvas.getHeight() / 2 / Math.max(2.5f - score / 30.f, 1) / getTargetFPS();
+                                        rowPosition += speed;
+
+                                        //check if selected columns are correct
+                                        if (rowPosition > canvas.getHeight()) {
+                                            if (p1_correctColumn == p1_column && p2_correctColumn == p2_column) {
+                                                score++;
+                                                p1_correctColumn = (int) (Math.random() * 4);
+                                                p1_row = generateRow(p1_correctColumn);
+                                                p2_correctColumn = (int) (Math.random() * 4);
+                                                p2_row = generateRow(p2_correctColumn);
+                                            } else {
+
+                                            }
                                         }
 
                                         //middle bar
@@ -548,7 +575,7 @@ public class MainActivity extends AppCompatActivity {
                 Y = event.getY(i);
                 if (p1_ready && p2_ready) {
                     if (Y > canvas.getHeight() / 2) p1_column = (int) (X / (canvas.getWidth() / 4));
-                    else p2_column = (int) (X / (canvas.getWidth() / 4));
+                    else p2_column = 3 - (int) (X / (canvas.getWidth() / 4));
                 } else {
                     if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
                         if (Y > canvas.getHeight() / 2) p1_ready = true;
@@ -556,8 +583,10 @@ public class MainActivity extends AppCompatActivity {
                         if (p1_ready && p2_ready) {
                             frameCount = 0;
                             score = 0;
-                            p1_row = generateRow();
-                            p2_row = generateRow();
+                            p1_correctColumn = (int) (Math.random() * 4);
+                            p1_row = generateRow(p1_correctColumn);
+                            p2_correctColumn = (int) (Math.random() * 4);
+                            p2_row = generateRow(p2_correctColumn);
                         }
                     }
                 }
@@ -633,10 +662,7 @@ public class MainActivity extends AppCompatActivity {
             rowPosition = -canvas.getWidth() / 4;
             correctColumn = (int) (Math.random() * 4);
         } else if (menu.equals("2P")) {
-            p1_rowPosition = canvas.getHeight()/2 - canvas.getWidth()/8;
-            p2_rowPosition = canvas.getHeight()/2 + canvas.getWidth()/8;
-            p1_correctColumn = (int) (Math.random() * 4);
-            p2_correctColumn = (int) (Math.random() * 4);
+            rowPosition = canvas.getHeight()/2 - canvas.getWidth()/8;
         }
 
         /*
@@ -708,6 +734,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return output;
+    }
+
+    private Icon[] generateRow(int col) {
+        correctColumn = col;
+        return generateRow();
     }
 
     private Icon toIcon(int[] a) {
