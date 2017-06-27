@@ -2,7 +2,6 @@ package com.example.chrisx.oddoneout;
 
 /**
  * Organized in order of priority:
- * @TODO fix multitouch bug in 2P mode
  * @TODO smoother animation for game over screen (includes "New high score" notif)
  * @TODO more icons/pairs
  * @TODO organize icons
@@ -467,8 +466,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     //handles touch events
     public boolean onTouchEvent(MotionEvent event) {
-        float X = event.getX(event.getActionIndex());
-        float Y = event.getY(event.getActionIndex());
+        float X = event.getX();
+        float Y = event.getY();
         int action = event.getAction();
 
         if (menu.equals("start") && startAnimation == 0) {
@@ -544,18 +543,22 @@ public class MainActivity extends AppCompatActivity {
         } else if (menu.equals("1P")) {
             column = (int) (X / (canvas.getWidth()/4));
         } else if (menu.equals("2P")) {
-            if (p1_ready && p2_ready) {
-                if (Y > canvas.getHeight()/2) p1_column = (int) (X / (canvas.getWidth()/4));
-                else p2_column = (int) (X / (canvas.getWidth()/4));
-            } else {
-                if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
-                    if (Y > canvas.getHeight()/2) p1_ready = true;
-                    else p2_ready = true;
-                    if (p1_ready && p2_ready) {
-                        frameCount = 0;
-                        score = 0;
-                        p1_row = generateRow();
-                        p2_row = generateRow();
+            for (int i = 0; i < event.getPointerCount(); i++) {
+                X = event.getX(i);
+                Y = event.getY(i);
+                if (p1_ready && p2_ready) {
+                    if (Y > canvas.getHeight() / 2) p1_column = (int) (X / (canvas.getWidth() / 4));
+                    else p2_column = (int) (X / (canvas.getWidth() / 4));
+                } else {
+                    if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
+                        if (Y > canvas.getHeight() / 2) p1_ready = true;
+                        else p2_ready = true;
+                        if (p1_ready && p2_ready) {
+                            frameCount = 0;
+                            score = 0;
+                            p1_row = generateRow();
+                            p2_row = generateRow();
+                        }
                     }
                 }
             }
