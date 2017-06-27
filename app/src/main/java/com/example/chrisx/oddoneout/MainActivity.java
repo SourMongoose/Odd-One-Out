@@ -44,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private String menu = "start";
     private String previousMenu;
 
-    private long score = 0;
+    //1P
+    private long score;
     private boolean isHighScore;
     private long previousHigh;
     private float speed = 0;
@@ -55,6 +56,23 @@ public class MainActivity extends AppCompatActivity {
     private float rowPosition;
     private int previousPair = -1;
 
+    //2P
+    private long p1_score;
+    private long p2_score;
+    private boolean p1_ready;
+    private boolean p2_ready;
+    private Icon[] p1_row;
+    private Icon[] p2_row;
+    private int p1_column;
+    private int p2_column;
+    private int p1_correctColumn;
+    private int p2_correctColumn;
+    private float p1_rowPosition;
+    private float p2_rowPosition;
+    private int p1_previousPair = -1;
+    private int p2_previousPair = -1;
+
+    //frame data
     private long nanosecondsPerFrame;
     private long millisecondsPerFrame;
 
@@ -243,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawText("2P", canvas.getWidth()/2, canvas.getHeight()*3/4-(modeText.ascent()+modeText.descent())/2, modeText);
 
                                 canvas.drawLine(canvas.getWidth()/10, canvas.getHeight()/2, canvas.getWidth()*9/10, canvas.getHeight()/2, modeText);
-                            } else if (menu.equals("game")) {
+                            } else if (menu.equals("1P")) {
                                 if (!paused) {
                                     //show current column
                                     canvas.drawRect(column * canvas.getWidth()/4, 0, (column + 1) * canvas.getWidth()/4, canvas.getHeight(),
@@ -275,8 +293,8 @@ public class MainActivity extends AppCompatActivity {
                                     }
 
                                     //move row down the canvas and adjust speed
-                                    rowPosition += speed;
                                     speed = canvas.getHeight() / Math.max(2.5f - score / 30.f, 1) / getTargetFPS();
+                                    rowPosition += speed;
 
                                     //check if selected column is correct
                                     if (rowPosition > canvas.getHeight()) {
@@ -293,6 +311,32 @@ public class MainActivity extends AppCompatActivity {
                                                 editor.apply();
                                             } else isHighScore = false;
                                         }
+                                    }
+                                }
+                            } else if (menu.equals("2P")) {
+                                if (!paused) {
+                                    if (p1_ready && p2_ready) {
+
+                                    } else {
+                                        Paint readyText = newPaint(Color.BLACK);
+                                        readyText.setTextAlign(Paint.Align.CENTER);
+                                        readyText.setTextSize(convert854(30));
+
+                                        if (p1_ready) canvas.drawText("Ready!", canvas.getWidth()/2, canvas.getHeight()*3/4, readyText);
+                                        else {
+                                            canvas.drawText("P1, tap here", canvas.getWidth()/2, canvas.getHeight()*3/4, readyText);
+                                            canvas.drawText("when ready", canvas.getWidth()/2, canvas.getHeight()*3/4+convert854(30), readyText);
+                                        }
+
+                                        canvas.save();
+                                        canvas.rotate(180);
+                                        canvas.translate(-canvas.getWidth(), -canvas.getHeight());
+                                        if (p2_ready) canvas.drawText("Ready!", canvas.getWidth()/2, canvas.getHeight()*3/4, readyText);
+                                        else {
+                                            canvas.drawText("P2, tap here", canvas.getWidth()/2, canvas.getHeight()*3/4, readyText);
+                                            canvas.drawText("when ready", canvas.getWidth()/2, canvas.getHeight()*3/4+convert854(30), readyText);
+                                        }
+                                        canvas.restore();
                                     }
                                 }
                             } else if (menu.equals("transition")) {
@@ -417,7 +461,7 @@ public class MainActivity extends AppCompatActivity {
                 //start button
                 if (Y > convert854(577) && Y < convert854(667)) {
                     if (getShow1v1().equals("off")) {
-                        menu = "game";
+                        menu = "1P";
                         frameCount = 0;
                         score = 0;
                         row = generateRow();
@@ -469,20 +513,37 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         } else if (menu.equals("mode")){
-            if (action == MotionEvent.ACTION_DOWN) {
+            if (action == MotionEvent.ACTION_UP) {
                 if (Y < canvas.getHeight()/2) {
                     //singleplayer
-                    menu = "game";
+                    menu = "1P";
                     frameCount = 0;
                     score = 0;
                     row = generateRow();
                 } else {
                     //1v1
-
+                    menu = "2P";
+                    p1_ready = p2_ready = false;
                 }
             }
-        } else if (menu.equals("game")) {
+        } else if (menu.equals("1P")) {
             column = (int) (X / (canvas.getWidth()/4));
+        } else if (menu.equals("2P")) {
+            if (p1_ready && p2_ready) {
+                if (Y > canvas.getHeight()) p1_column = (int) (X / (canvas.getWidth()/4));
+                else p2_column = (int) (X / (canvas.getWidth()/4));
+            } else {
+                if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
+                    if (Y > canvas.getHeight()/2) p1_ready = true;
+                    else p2_ready = true;
+                    if (p1_ready && p2_ready) {
+                        frameCount = 0;
+                        score = 0;
+                        p1_row = generateRow();
+                        p2_row = generateRow();
+                    }
+                }
+            }
         } else if (menu.equals("gameover")) {
             if (action == MotionEvent.ACTION_UP) {
                 if (X > canvas.getWidth() - 80 && Y < 80) {
@@ -550,8 +611,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Icon[] generateRow() {
-        rowPosition = -canvas.getWidth()/4;
-        correctColumn = (int)(Math.random()*4);
+        if (menu.equals("1P")) {
+            rowPosition = -canvas.getWidth() / 4;
+            correctColumn = (int) (Math.random() * 4);
+        } else if (menu.equals("2P")) {
+            p1_rowPosition = canvas.getHeight()/2 - canvas.getWidth()/8;
+            p2_rowPosition = canvas.getHeight()/2 + canvas.getWidth()/8;
+            p1_correctColumn = (int) (Math.random() * 4);
+            p2_correctColumn = (int) (Math.random() * 4);
+        }
 
         /*
          * Icon table (for reference):

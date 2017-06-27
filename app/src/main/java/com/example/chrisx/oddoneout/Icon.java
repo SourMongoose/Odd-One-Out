@@ -5,8 +5,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 public class Icon {
-    private static final float strokeWidth = 2;
-
     private int id;
     private float angle;
     private float rotateSpeed;
