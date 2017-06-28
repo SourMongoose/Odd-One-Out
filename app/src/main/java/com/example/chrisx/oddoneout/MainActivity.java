@@ -2,6 +2,8 @@ package com.example.chrisx.oddoneout;
 
 /**
  * Organized in order of priority:
+ * @TODO way to exit 2P mode
+ * @TODO unlocking system for 2P (30+ score?)
  * @TODO smoother animation for game over screen (includes "New high score" notif)
  * @TODO more icons/pairs
  * @TODO organize icons
@@ -329,9 +331,7 @@ public class MainActivity extends AppCompatActivity {
                                         for (int i = 0; i < p1_row.length; i++) {
                                             p1_row[i].drawShape(canvas, canvas.getWidth()/8 + canvas.getWidth()/4 * i, rowPosition + canvas.getWidth()/8, canvas.getWidth()/4 / (float) Math.sqrt(2) - 10, getInvertColors().equals("on"));
                                         }
-                                        canvas.save();
-                                        canvas.rotate(180);
-                                        canvas.translate(-canvas.getWidth(), -canvas.getHeight());
+                                        flipScreen();
                                         for (int i = 0; i < p2_row.length; i++) {
                                             p2_row[i].drawShape(canvas, canvas.getWidth() / 8 + canvas.getWidth() / 4 * i, rowPosition + canvas.getWidth() / 8, canvas.getWidth() / 4 / (float) Math.sqrt(2) - 10, getInvertColors().equals("on"));
                                         }
@@ -350,7 +350,8 @@ public class MainActivity extends AppCompatActivity {
                                                 p2_correctColumn = (int) (Math.random() * 4);
                                                 p2_row = generateRow(p2_correctColumn);
                                             } else {
-
+                                                menu = "2P_transition";
+                                                transitionFrames = 0;
                                             }
                                         }
 
@@ -358,6 +359,13 @@ public class MainActivity extends AppCompatActivity {
                                         canvas.drawRect(-5, canvas.getHeight()/2-canvas.getWidth()/8, canvas.getWidth()+5, canvas.getHeight()/2+canvas.getWidth()/8, newPaint(Color.WHITE));
                                         canvas.drawLine(-5, canvas.getHeight()/2-canvas.getWidth()/8, canvas.getWidth()+5, canvas.getHeight()/2-canvas.getWidth()/8, newPaint(Color.BLACK));
                                         canvas.drawLine(-5, canvas.getHeight()/2+canvas.getWidth()/8, canvas.getWidth()+5, canvas.getHeight()/2+canvas.getWidth()/8, newPaint(Color.BLACK));
+                                        Paint scoreText = newPaint(Color.BLACK);
+                                        scoreText.setTextAlign(Paint.Align.CENTER);
+                                        scoreText.setTextSize(canvas.getWidth()/8);
+                                        canvas.drawText(score+"", canvas.getWidth()/8, canvas.getHeight()/2-(scoreText.ascent()+scoreText.descent())/2, scoreText);
+                                        flipScreen();
+                                        canvas.drawText(score+"", canvas.getWidth()/8, canvas.getHeight()/2-(scoreText.ascent()+scoreText.descent())/2, scoreText);
+                                        canvas.restore();
                                     } else {
                                         Paint readyText = newPaint(Color.BLACK);
                                         readyText.setTextAlign(Paint.Align.CENTER);
@@ -369,9 +377,7 @@ public class MainActivity extends AppCompatActivity {
                                             canvas.drawText("when ready", canvas.getWidth()/2, canvas.getHeight()*3/4+convert854(30), readyText);
                                         }
 
-                                        canvas.save();
-                                        canvas.rotate(180);
-                                        canvas.translate(-canvas.getWidth(), -canvas.getHeight());
+                                        flipScreen();
                                         if (p2_ready) canvas.drawText("Ready!", canvas.getWidth()/2, canvas.getHeight()*3/4, readyText);
                                         else {
                                             canvas.drawText("P2, tap here", canvas.getWidth()/2, canvas.getHeight()*3/4, readyText);
@@ -382,6 +388,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             } else if (menu.equals("transition")) {
                                 int alpha = 255 - (int)Math.max(255*(transitionFrames-1.5*getTargetFPS())/(0.5*getTargetFPS()), 0);
+
                                 //show current column
                                 canvas.drawRect(column * canvas.getWidth()/4, 0, (column + 1) * canvas.getWidth()/4, canvas.getHeight(),
                                         newPaint(getInvertColors().equals("off") ? Color.argb(alpha,245,245,245) : Color.argb(alpha,200,200,200)));//dividing lines
@@ -413,6 +420,49 @@ public class MainActivity extends AppCompatActivity {
                                 else {
                                     menu = "gameover";
                                     gameoverFrames = 0;
+                                }
+                            } else if (menu.equals("2P_transition")) {
+                                //columns fade during first half second
+                                if (transitionFrames < 0.5*getTargetFPS()) {
+                                    int alpha = (int) (255 - 255 * transitionFrames / (0.5*getTargetFPS()));
+
+                                    //show current columns
+                                    canvas.drawRect(p1_column * canvas.getWidth()/4, canvas.getHeight()/2, (p1_column + 1) * canvas.getWidth()/4, canvas.getHeight(),
+                                            newPaint(getInvertColors().equals("off") ? Color.argb(alpha,245,245,245) : Color.argb(alpha,220,220,220)));
+                                    canvas.drawRect((3-p2_column) * canvas.getWidth()/4, 0, (3-p2_column + 1) * canvas.getWidth()/4, canvas.getHeight()/2,
+                                            newPaint(getInvertColors().equals("off") ? Color.argb(alpha,245,245,245) : Color.argb(alpha,220,220,220)));
+                                    //dividing lines
+                                    for (int i = 0; i < 3; i++) {
+                                        float x = canvas.getWidth()/4 + i * canvas.getWidth()/4;
+                                        canvas.drawLine(x, 0, x, canvas.getHeight(),
+                                                newPaint(getInvertColors().equals("off") ? Color.argb(alpha,200,200,200) : Color.argb(alpha,150,150,150)));
+                                    }
+                                }
+
+                                draw2PScores();
+                                flipScreen();
+                                draw2PScores();
+                                canvas.restore();
+
+                                //middle bar
+                                int barAlpha = transitionFrames > 2.5*getTargetFPS() ? (int) (255*6 - 255 * transitionFrames / (0.5*getTargetFPS())) : 255;
+                                canvas.drawRect(-5, canvas.getHeight()/2-canvas.getWidth()/8, canvas.getWidth()+5, canvas.getHeight()/2+canvas.getWidth()/8, newPaint(Color.argb(barAlpha,255,255,255)));
+                                canvas.drawLine(-5, canvas.getHeight()/2-canvas.getWidth()/8, canvas.getWidth()+5, canvas.getHeight()/2-canvas.getWidth()/8, newPaint(Color.argb(barAlpha,0,0,0)));
+                                canvas.drawLine(-5, canvas.getHeight()/2+canvas.getWidth()/8, canvas.getWidth()+5, canvas.getHeight()/2+canvas.getWidth()/8, newPaint(Color.argb(barAlpha,0,0,0)));
+                                Paint scoreText = newPaint(Color.argb(barAlpha,0,0,0));
+                                scoreText.setTextAlign(Paint.Align.CENTER);
+                                scoreText.setTextSize(canvas.getWidth()/8);
+                                canvas.drawText(score+"", canvas.getWidth()/8, canvas.getHeight()/2-(scoreText.ascent()+scoreText.descent())/2, scoreText);
+                                flipScreen();
+                                canvas.drawText(score+"", canvas.getWidth()/8, canvas.getHeight()/2-(scoreText.ascent()+scoreText.descent())/2, scoreText);
+                                canvas.restore();
+
+                                if (transitionFrames < 3*getTargetFPS()) transitionFrames++;
+                                else {
+                                    if (p1_correctColumn == p1_column) p1_score++;
+                                    else if (p2_correctColumn == p2_column) p2_score++;
+                                    menu = "2P";
+                                    p1_ready = p2_ready = false;
                                 }
                             } else if (menu.equals("gameover")) {
                                 Paint p = newPaint(Color.BLACK);
@@ -564,6 +614,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     //1v1
                     menu = "2P";
+                    p1_score = p2_score = 0;
                     p1_ready = p2_ready = false;
                 }
             }
@@ -623,6 +674,12 @@ public class MainActivity extends AppCompatActivity {
         return canvas.getHeight() / (854 / f);
     }
 
+    private void flipScreen() {
+        canvas.save();
+        canvas.rotate(180);
+        canvas.translate(-canvas.getWidth(), -canvas.getHeight());
+    }
+
     private int getHighScore() {
         return sharedPref.getInt("high_score", 0);
     }
@@ -637,6 +694,54 @@ public class MainActivity extends AppCompatActivity {
 
     private String getShow1v1() {
         return sharedPref.getString("show_1v1", "off");
+    }
+
+    private void draw2PScores() {
+        Paint scoreText = newPaint(Color.BLACK);
+        scoreText.setTextAlign(Paint.Align.CENTER);
+        scoreText.setTextSize(canvas.getHeight()/8);
+        float scoreHeight = canvas.getHeight()*3/4 - (scoreText.ascent() + scoreText.descent()) / 2;
+        Paint playerText = newPaint(Color.BLACK);
+        playerText.setTextAlign(Paint.Align.CENTER);
+        playerText.setTextSize(canvas.getHeight()/20);
+        float playerHeight = canvas.getHeight()*7/8 - (playerText.ascent() + playerText.descent()) / 2;
+
+        int alpha;
+        if (transitionFrames < 0.5*getTargetFPS()) alpha = (int) (255 * transitionFrames / (0.5*getTargetFPS()));
+        else if (transitionFrames < 2.5*getTargetFPS()) alpha = 255;
+        else alpha = (int) (255*6 - 255 * transitionFrames / (0.5*getTargetFPS()));
+
+        //show previous score during first 1.5 seconds
+        if (transitionFrames < 1.5*getTargetFPS()) {
+            int scoreAlpha;
+            if (transitionFrames < getTargetFPS()) scoreAlpha = 255;
+            else scoreAlpha = (int) (255*3 - 255 * transitionFrames / (0.5*getTargetFPS()));
+
+            scoreText.setAlpha(p1_correctColumn == p1_column ? Math.min(scoreAlpha, alpha) : alpha);
+            canvas.drawText(p1_score+"", canvas.getWidth()/4, scoreHeight, scoreText);
+            scoreText.setAlpha(alpha);
+            canvas.drawText("-", canvas.getWidth()/2, scoreHeight, scoreText);
+            scoreText.setAlpha(p2_correctColumn == p2_column ? Math.min(scoreAlpha, alpha) : alpha);
+            canvas.drawText(p2_score+"", canvas.getWidth()*3/4, scoreHeight, scoreText);
+        }
+        //show resulting score during last 1.5 seconds
+        else {
+            int scoreAlpha;
+            if (transitionFrames > 2*getTargetFPS()) scoreAlpha = 255;
+            else scoreAlpha = (int) (-255*3 + 255 * transitionFrames / (0.5*getTargetFPS()));
+
+            scoreText.setAlpha(p1_correctColumn == p1_column ? Math.min(scoreAlpha, alpha) : alpha);
+            canvas.drawText((p1_correctColumn == p1_column ? p1_score + 1 : p1_score)+"", canvas.getWidth()/4, scoreHeight, scoreText);
+            scoreText.setAlpha(alpha);
+            canvas.drawText("-", canvas.getWidth()/2, scoreHeight, scoreText);
+            scoreText.setAlpha(p2_correctColumn == p2_column ? Math.min(scoreAlpha, alpha) : alpha);
+            canvas.drawText((p2_correctColumn == p2_column ? p2_score + 1 : p2_score)+"", canvas.getWidth()*3/4, scoreHeight, scoreText);
+        }
+
+        //show P1/P2
+        playerText.setAlpha(alpha);
+        canvas.drawText("P1", canvas.getWidth()/4, playerHeight, playerText);
+        canvas.drawText("P2", canvas.getWidth()*3/4, playerHeight, playerText);
     }
 
     private void drawGear(float x, float y, float w) {
