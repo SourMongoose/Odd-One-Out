@@ -68,8 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private int p2_column;
     private int p1_correctColumn;
     private int p2_correctColumn;
-    private int p1_previousPair = -1;
-    private int p2_previousPair = -1;
+    private int gamesPlayed;
 
     //frame data
     private long nanosecondsPerFrame;
@@ -350,6 +349,7 @@ public class MainActivity extends AppCompatActivity {
                                                 p2_correctColumn = (int) (Math.random() * 4);
                                                 p2_row = generateRow(p2_correctColumn);
                                             } else {
+                                                gamesPlayed++;
                                                 menu = "2P_transition";
                                                 transitionFrames = 0;
                                             }
@@ -371,11 +371,14 @@ public class MainActivity extends AppCompatActivity {
                                         readyText.setTextAlign(Paint.Align.CENTER);
                                         readyText.setTextSize(convert854(30));
 
+                                        Icon cancel = new Icon(23);
+
                                         if (p1_ready) canvas.drawText("Ready!", canvas.getWidth()/2, canvas.getHeight()*3/4, readyText);
                                         else {
                                             canvas.drawText("P1, tap here", canvas.getWidth()/2, canvas.getHeight()*3/4, readyText);
                                             canvas.drawText("when ready", canvas.getWidth()/2, canvas.getHeight()*3/4+convert854(30), readyText);
                                         }
+                                        cancel.drawShape(canvas, 40, canvas.getHeight()-40, 30, getInvertColors().equals("on"));
 
                                         flipScreen();
                                         if (p2_ready) canvas.drawText("Ready!", canvas.getWidth()/2, canvas.getHeight()*3/4, readyText);
@@ -383,6 +386,7 @@ public class MainActivity extends AppCompatActivity {
                                             canvas.drawText("P2, tap here", canvas.getWidth()/2, canvas.getHeight()*3/4, readyText);
                                             canvas.drawText("when ready", canvas.getWidth()/2, canvas.getHeight()*3/4+convert854(30), readyText);
                                         }
+                                        cancel.drawShape(canvas, 40, canvas.getHeight()-40, 30, getInvertColors().equals("on"));
                                         canvas.restore();
                                     }
                                 }
@@ -512,6 +516,8 @@ public class MainActivity extends AppCompatActivity {
                                 drawGear(canvas.getWidth()-40, 40, 20);
 
                                 gameoverFrames++;
+                            } else if (menu.equals("2P_gameover")) {
+                                
                             }
 
                             //update canvas
@@ -616,6 +622,7 @@ public class MainActivity extends AppCompatActivity {
                     menu = "2P";
                     p1_score = p2_score = 0;
                     p1_ready = p2_ready = false;
+                    gamesPlayed = 0;
                 }
             }
         } else if (menu.equals("1P")) {
@@ -629,6 +636,15 @@ public class MainActivity extends AppCompatActivity {
                     else p2_column = 3 - (int) (X / (canvas.getWidth() / 4));
                 } else {
                     if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
+                        //if either player presses X
+                        if ((X < 80 && Y > canvas.getHeight()-80) || (X > canvas.getWidth()-80 && Y < 80)) {
+                            if (gamesPlayed == 0) menu = "start";
+                            else menu = "2P_gameover";
+
+                            return true;
+                        }
+
+                        //otherwise, ready
                         if (Y > canvas.getHeight() / 2) p1_ready = true;
                         else p2_ready = true;
                         if (p1_ready && p2_ready) {
@@ -841,6 +857,7 @@ public class MainActivity extends AppCompatActivity {
         return output;
     }
 
+    //overloaded function used for 2P mode
     private Icon[] generateRow(int col) {
         correctColumn = col;
         return generateRow();
