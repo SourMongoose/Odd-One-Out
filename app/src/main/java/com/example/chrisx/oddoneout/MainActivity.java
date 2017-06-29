@@ -2,9 +2,9 @@ package com.example.chrisx.oddoneout;
 
 /**
  * Organized in order of priority:
- * @TODO way to exit 2P mode
  * @TODO unlocking system for 2P (30+ score?)
  * @TODO smoother animation for game over screen (includes "New high score" notif)
+ * @TODO make 2P game over screen look better
  * @TODO more icons/pairs
  * @TODO organize icons
  * @TODO update tutorial to make it look better
@@ -517,7 +517,29 @@ public class MainActivity extends AppCompatActivity {
 
                                 gameoverFrames++;
                             } else if (menu.equals("2P_gameover")) {
-                                
+                                Paint p = newPaint(Color.BLACK);
+                                p.setTextAlign(Paint.Align.CENTER);
+                                p.setTextSize(70);
+
+                                //display winner
+                                String winner = p1_score > p2_score ? "P1 wins!" : p2_score > p1_score ? "P2 wins!" : "It's a tie!";
+                                canvas.drawText(winner, canvas.getWidth()/2, canvas.getHeight()/4, p);
+
+                                //show final score
+                                p.setTextSize(100);
+                                canvas.drawText(p1_score+"", canvas.getWidth()/4, canvas.getHeight()/2, p);
+                                canvas.drawText("-", canvas.getWidth()/2, canvas.getHeight()/2, p);
+                                canvas.drawText(p2_score+"", canvas.getWidth()*3/4, canvas.getHeight()/2, p);
+
+                                p.setTextSize(30);
+                                p.setAlpha((int)(255*Math.abs(Math.sin((float)gameoverFrames/getTargetFPS()*60*2/180*Math.PI))));
+                                canvas.drawText("tap anywhere", canvas.getWidth()/2, canvas.getHeight()*3/4, p);
+                                canvas.drawText("to continue", canvas.getWidth()/2, canvas.getHeight()*3/4+30, p);
+
+                                //settings
+                                drawGear(canvas.getWidth()-40, 40, 20);
+
+                                gameoverFrames++;
                             }
 
                             //update canvas
@@ -573,8 +595,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 //settings
                 else if (X > canvas.getWidth() - 80 && Y < 80) {
+                    previousMenu = menu;
                     menu = "settings";
-                    previousMenu = "start";
                 }
             }
         } else if (menu.equals("howtoplay")) {
@@ -639,7 +661,10 @@ public class MainActivity extends AppCompatActivity {
                         //if either player presses X
                         if ((X < 80 && Y > canvas.getHeight()-80) || (X > canvas.getWidth()-80 && Y < 80)) {
                             if (gamesPlayed == 0) menu = "start";
-                            else menu = "2P_gameover";
+                            else {
+                                menu = "2P_gameover";
+                                gameoverFrames = 0;
+                            }
 
                             return true;
                         }
@@ -658,11 +683,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-        } else if (menu.equals("gameover")) {
+        } else if (menu.equals("gameover") || menu.equals("2P_gameover")) {
             if (action == MotionEvent.ACTION_UP) {
                 if (X > canvas.getWidth() - 80 && Y < 80) {
+                    previousMenu = menu;
                     menu = "settings";
-                    previousMenu = "gameover";
                 } else menu = "start";
             }
         }
