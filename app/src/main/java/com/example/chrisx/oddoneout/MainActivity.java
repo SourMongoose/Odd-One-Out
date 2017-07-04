@@ -11,6 +11,7 @@ package com.example.chrisx.oddoneout;
  * @TODO update tutorial to make it look better
  * ...
  * @TODO extreme?
+ * @TODO global high scores?
  */
 
 import android.content.Context;
@@ -242,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                                 else if (getInvertColors().equals("off")) canvas.drawRect(canvas.getWidth()/4+convert854(20), convert854(INVERT_COLORS_HEIGHT+30), canvas.getWidth()*2/4-convert854(20), convert854(INVERT_COLORS_HEIGHT+90), boxPaint);
 
                                 //show 1v1 mode as an option
-                                canvas.drawText("show 1v1 mode:", convert854(20), convert854(SHOW_1V1_HEIGHT), categoryText);
+                                canvas.drawText("enable 2P mode:", convert854(20), convert854(SHOW_1V1_HEIGHT), categoryText);
                                 canvas.drawText("on", canvas.getWidth()/8, convert854(SHOW_1V1_HEIGHT+75), choiceText);
                                 canvas.drawText("off", canvas.getWidth()*3/8, convert854(SHOW_1V1_HEIGHT+75), choiceText);
                                 if (getShow1v1().equals("on")) canvas.drawRect(convert854(20), convert854(SHOW_1V1_HEIGHT+30), canvas.getWidth()/4-convert854(20), convert854(SHOW_1V1_HEIGHT+90), boxPaint);
@@ -259,7 +260,13 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawText("1P", canvas.getWidth()/2, canvas.getHeight()/4-(modeText.ascent()+modeText.descent())/2, modeText);
                                 canvas.drawText("2P", canvas.getWidth()/2, canvas.getHeight()*3/4-(modeText.ascent()+modeText.descent())/2, modeText);
 
-                                canvas.drawLine(canvas.getWidth()/10, canvas.getHeight()/2, canvas.getWidth()*9/10, canvas.getHeight()/2, modeText);
+                                modeText.setTextSize(canvas.getHeight()/30);
+
+                                canvas.drawText("choose mode", canvas.getWidth()/2, canvas.getHeight()/2-(modeText.ascent()+modeText.descent())/2, modeText);
+                                float textWidth = modeText.measureText("choose mode");
+
+                                canvas.drawLine(-5, canvas.getHeight()/2, canvas.getWidth()/2-textWidth/2-convert854(20), canvas.getHeight()/2, modeText);
+                                canvas.drawLine(canvas.getWidth()/2+textWidth/2+convert854(20), canvas.getHeight()/2, canvas.getWidth()+5, canvas.getHeight()/2, modeText);
                             } else if (menu.equals("1P")) {
                                 if (!paused) {
                                     //show current column
