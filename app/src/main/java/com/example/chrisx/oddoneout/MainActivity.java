@@ -5,6 +5,7 @@ package com.example.chrisx.oddoneout;
  * @TODO unlocking system for 2P (30+ score?)
  * @TODO smoother animation for game over screen (includes "New high score" notif)
  * @TODO make 2P game over screen look better
+ * @TODO make 30/45 fps look smoother
  * @TODO more icons/pairs
  * @TODO organize icons
  * @TODO update tutorial to make it look better
@@ -790,7 +791,7 @@ public class MainActivity extends AppCompatActivity {
         p.setStrokeWidth(convert854(2));
         p.setStyle(Paint.Style.STROKE);
 
-        for (float angle = 0; angle < 2*Math.PI; angle += Math.PI/3) {
+        for (float angle = 0; angle < 5.5/3*Math.PI; angle += Math.PI/3) {
             canvas.drawLine(x+w*3/4*(float)Math.cos(angle+Math.PI/18), y-w*3/4*(float)Math.sin(angle+Math.PI/18),
                     x+w*(float)Math.cos(angle+Math.PI/10), y-w*(float)Math.sin(angle+Math.PI/10), p);
             canvas.drawLine(x+w*(float)Math.cos(angle+Math.PI/10), y-w*(float)Math.sin(angle+Math.PI/10),
@@ -801,6 +802,18 @@ public class MainActivity extends AppCompatActivity {
                     x+w*3/4*(float)Math.cos(angle+Math.PI*7/18), y-w*3/4*(float)Math.sin(angle+Math.PI*7/18), p);
         }
         canvas.drawCircle(x, y, w/2, p);
+    }
+
+    private void drawStar(float x, float y, float w) {
+        Paint p = newPaint(Color.BLACK);
+        p.setStrokeWidth(convert854(2));
+
+        for (float angle = (float)Math.PI/2; angle < 9*Math.PI/4; angle += 2*Math.PI/5) {
+            canvas.drawLine(x+w*(float)Math.cos(angle), y-w*(float)Math.sin(angle),
+                    x+w*3/5*(float)Math.cos(angle+Math.PI/5), y-w*3/5*(float)Math.sin(angle+Math.PI/5), p);
+            canvas.drawLine(x+w*3/5*(float)Math.cos(angle+Math.PI/5), y-w*3/5*(float)Math.sin(angle+Math.PI/5),
+                    x+w*(float)Math.cos(angle+2*Math.PI/5), y-w*(float)Math.sin(angle+2*Math.PI/5), p);
+        }
     }
 
     private Icon[] generateRow() {
