@@ -61,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
     private float rowPosition;
     private int previousPair = -1;
 
+    private int[] stars = new int[3];
+    private int[] upcomingStars = new int[3];
+
     //2P
     private long p1_score;
     private long p2_score;
@@ -298,6 +301,12 @@ public class MainActivity extends AppCompatActivity {
                                     //display row
                                     for (int i = 0; i < row.length; i++) {
                                         row[i].drawShape(canvas, w()/8 + w()/4 * i, rowPosition + w()/8, w()/4 / (float) Math.sqrt(2) - 10, getInvertColors().equals("on"));
+                                    }
+
+                                    //draw stars
+                                    for (int i = 0; i < stars.length; i++) {
+                                        drawStar(w()/8 + stars[i] * w()/4, rowPosition + w()/4 + (stars.length - i) * h()/(stars.length + 1), w()/16);
+                                        drawStar(w()/8 + upcomingStars[i] * w()/4, rowPosition - (i + 1) * h()/(stars.length + 1), w()/16);
                                     }
 
                                     //move row down the canvas and adjust speed
@@ -593,6 +602,7 @@ public class MainActivity extends AppCompatActivity {
                         menu = "1P";
                         frameCount = 0;
                         score = 0;
+                        upcomingStars[0] = upcomingStars[1] = upcomingStars[2] = -1;
                         row = generateRow();
                     } else {
                         menu = "mode";
@@ -648,6 +658,7 @@ public class MainActivity extends AppCompatActivity {
                     menu = "1P";
                     frameCount = 0;
                     score = 0;
+                    upcomingStars[0] = upcomingStars[1] = upcomingStars[2] = -1;
                     row = generateRow();
                 } else {
                     //1v1
@@ -837,6 +848,12 @@ public class MainActivity extends AppCompatActivity {
         if (menu.equals("1P")) {
             rowPosition = -w() / 4;
             correctColumn = (int) (Math.random() * 4);
+
+            for (int i = 0; i < stars.length; i++) {
+                stars[i] = upcomingStars[i];
+                if (Math.random() < (score + 1)/75.) upcomingStars[i] = (int) (Math.random() * 4);
+                else upcomingStars[i] = -1;
+            }
         } else if (menu.equals("2P")) {
             rowPosition = h()/2 - w()/8;
         }
