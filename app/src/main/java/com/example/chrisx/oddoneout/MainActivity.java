@@ -3,7 +3,6 @@ package com.example.chrisx.oddoneout;
 /**
  * Organized in order of priority:
  * @TODO unlocking system for 2P (30+ score?/# of stars)
- * @TODO add animation when star is collected
  * @TODO add back button to tutorial
  * @TODO smoother animation for game over screen (includes "New high score" notif)
  * @TODO make 2P game over screen look better
@@ -63,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
 
     private int[] stars = new int[3];
     private int[] upcomingStars = new int[3];
+
+    private int starCollectColumn;
+    private long starCollectAnimation;
 
     //2P
     private long p1_score;
@@ -315,6 +317,25 @@ public class MainActivity extends AppCompatActivity {
                                         drawStar(w()/8 + stars[i] * w()/4, rowPosition + w()/4 + (stars.length - i) * h()/(stars.length + 1), w()/16);
                                         drawStar(w()/8 + upcomingStars[i] * w()/4, rowPosition - (i + 1) * h()/(stars.length + 1), w()/16);
                                     }
+                                    //if a star has recently been collected, show a small animation
+                                    if (starCollectAnimation > 0) {
+                                        if (starCollectAnimation > getTargetFPS() / 8) {
+                                            //star rises back up, and then...
+                                            float starHeight = h() - w()*5/16 + starCollectAnimation * w()*3/16 / (getTargetFPS()/8);
+                                            float x = (float) starCollectAnimation / (getTargetFPS()/8);
+                                            float starWidth = (-x*x + 4*x - 3) * (w()/16);
+                                            drawStar(w()/8 + starCollectColumn * w()/4, starHeight, starWidth);
+                                        } else {
+                                            //explodes
+                                            float x = (float) starCollectAnimation / (getTargetFPS()/8);
+                                            float explosionWidth = (1 - x*x) * (w()/16);
+                                            for (float angle = 0; angle < 1.9*Math.PI; angle += (2*Math.PI)/12) {
+                                                canvas.drawCircle(w()/8 + starCollectColumn * w()/4 + explosionWidth*(float)Math.cos(angle), h() - w()/8 - explosionWidth*(float)Math.sin(angle), convert854(2), newPaint(Color.BLACK));
+                                            }
+                                        }
+
+                                        starCollectAnimation--;
+                                    }
 
                                     //move row down the canvas and adjust speed
                                     speed = h() / Math.max(2.5f - score / 30.f, 1) / getTargetFPS();
@@ -328,6 +349,8 @@ public class MainActivity extends AppCompatActivity {
                                                 if (stars[i] == column) {
                                                     editor.putInt("stars", getStars() + 1);
                                                     editor.apply();
+                                                    starCollectColumn = stars[i];
+                                                    starCollectAnimation = getTargetFPS() / 4;
                                                     stars[i] = -1;
                                                 }
                                             }
