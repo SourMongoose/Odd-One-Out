@@ -2,8 +2,8 @@ package com.example.chrisx.oddoneout;
 
 /**
  * Organized in order of priority:
- * @TODO implement star system
  * @TODO unlocking system for 2P (30+ score?/# of stars)
+ * @TODO add animation when star is collected
  * @TODO add back button to tutorial
  * @TODO smoother animation for game over screen (includes "New high score" notif)
  * @TODO make 2P game over screen look better
@@ -257,6 +257,13 @@ public class MainActivity extends AppCompatActivity {
                                 //back button
                                 Icon backButton = new Icon(5, 270);
                                 backButton.drawShape(canvas, 60, h()-40, 60, getInvertColors().equals("on"));
+
+                                //show number of stars
+                                drawStar(w()-40, h()-40, 20);
+                                Paint starCount = newPaint(Color.BLACK);
+                                starCount.setTextAlign(Paint.Align.RIGHT);
+                                starCount.setTextSize(convert854(40));
+                                canvas.drawText(getStars()+"", w()-80, h()-40-(starCount.ascent()+starCount.descent())/2, starCount);
                             } else if (menu.equals("mode")){
                                 Paint modeText = newPaint(Color.BLACK);
                                 modeText.setTextAlign(Paint.Align.CENTER);
@@ -312,6 +319,20 @@ public class MainActivity extends AppCompatActivity {
                                     //move row down the canvas and adjust speed
                                     speed = h() / Math.max(2.5f - score / 30.f, 1) / getTargetFPS();
                                     rowPosition += speed;
+
+                                    //check if stars are collected
+                                    for (int i = 0; i < stars.length; i++) {
+                                        if (stars[i] >= 0) {
+                                            float starHeight = rowPosition + w()/4 + (stars.length - i) * h()/(stars.length + 1) - w()/16;
+                                            if (starHeight > h()) {
+                                                if (stars[i] == column) {
+                                                    editor.putInt("stars", getStars() + 1);
+                                                    editor.apply();
+                                                    stars[i] = -1;
+                                                }
+                                            }
+                                        }
+                                    }
 
                                     //check if selected column is correct
                                     if (rowPosition > h()) {
@@ -753,6 +774,10 @@ public class MainActivity extends AppCompatActivity {
     private int getHighScore() {
         return sharedPref.getInt("high_score", 0);
     }
+
+    private int getStars() {
+        return sharedPref.getInt("stars", 0);
+    }
     
     private int getTargetFPS() {
         return sharedPref.getInt("target_fps", 60);
@@ -851,7 +876,7 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = 0; i < stars.length; i++) {
                 stars[i] = upcomingStars[i];
-                if (Math.random() < (score + 1)/75.) upcomingStars[i] = (int) (Math.random() * 4);
+                if (Math.random() < (score + 6)/75.) upcomingStars[i] = (int) (Math.random() * 4);
                 else upcomingStars[i] = -1;
             }
         } else if (menu.equals("2P")) {
