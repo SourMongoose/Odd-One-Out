@@ -632,6 +632,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if (menu.equals("settings")) {
+            menu = previousMenu;
+        } else if (menu.equals("howtoplay")) {
+            if (tutorialFrames > 0) tutorialFrames--;
+        }
+    }
+
+    @Override
     //handles touch events
     public boolean onTouchEvent(MotionEvent event) {
         float X = event.getX();
