@@ -154,9 +154,12 @@ public class MainActivity extends AppCompatActivity {
 
                                 //settings icon
                                 drawGear(w()-40, 40, 20);
+                                //shop
+                                drawShop(40, 40, 20);
+
                                 Paint cover = newPaint(Color.WHITE);
                                 cover.setAlpha((int)(255*Math.min(1, startAnimation/(getTargetFPS()*2/3f))));
-                                canvas.drawRect(w()-80, 0, w(), 80, cover);
+                                canvas.drawRect(0, 0, w(), 80, cover);
 
                                 if (startAnimation > 0) startAnimation--;
                             } else if (menu.equals("howtoplay")) {
@@ -255,6 +258,15 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawText("off", w()*3/8, convert854(SHOW_1V1_HEIGHT+75), choiceText);
                                 if (getShow1v1().equals("on")) canvas.drawRect(convert854(20), convert854(SHOW_1V1_HEIGHT+30), w()/4-convert854(20), convert854(SHOW_1V1_HEIGHT+90), boxPaint);
                                 else if (getShow1v1().equals("off")) canvas.drawRect(w()/4+convert854(20), convert854(SHOW_1V1_HEIGHT+30), w()*2/4-convert854(20), convert854(SHOW_1V1_HEIGHT+90), boxPaint);
+
+                                //back button
+                                Icon backButton = new Icon(5, 270);
+                                backButton.drawShape(canvas, 60, h()-40, 60, getInvertColors().equals("on"));
+                            } else if (menu.equals("shop")) {
+                                Paint titleText = newPaint(Color.BLACK);
+                                titleText.setTextAlign(Paint.Align.CENTER);
+                                titleText.setTextSize(convert854(50));
+                                canvas.drawText("shop", w()/2, convert854(75), titleText);
 
                                 //back button
                                 Icon backButton = new Icon(5, 270);
@@ -577,6 +589,8 @@ public class MainActivity extends AppCompatActivity {
 
                                 //settings
                                 drawGear(w()-40, 40, 20);
+                                //shop
+                                drawShop(40, 40, 20);
 
                                 gameoverFrames++;
                             } else if (menu.equals("2P_gameover")) {
@@ -601,6 +615,8 @@ public class MainActivity extends AppCompatActivity {
 
                                 //settings
                                 drawGear(w()-40, 40, 20);
+                                //shop
+                                drawShop(40, 40, 20);
 
                                 gameoverFrames++;
                             }
@@ -633,7 +649,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (menu.equals("settings")) {
+        if (menu.equals("settings") || menu.equals("shop")) {
             menu = previousMenu;
         } else if (menu.equals("howtoplay")) {
             if (tutorialFrames > 0) tutorialFrames--;
@@ -671,6 +687,11 @@ public class MainActivity extends AppCompatActivity {
                     previousMenu = menu;
                     menu = "settings";
                 }
+                //shop
+                else if (X < 80 && Y < 80) {
+                    previousMenu = menu;
+                    menu = "shop";
+                }
             }
         } else if (menu.equals("howtoplay")) {
             if (action == MotionEvent.ACTION_UP) {
@@ -702,6 +723,12 @@ public class MainActivity extends AppCompatActivity {
                     if (X < w()/4) editor.putString("show_1v1", "on");
                     else if (X < w()*2/4) editor.putString("show_1v1", "off");
                     editor.apply();
+                }
+            }
+        } else if (menu.equals("shop")) {
+            if (action == MotionEvent.ACTION_UP) {
+                if (X < 120 && Y > h() - 80) {
+                    menu = previousMenu;
                 }
             }
         } else if (menu.equals("mode")){
@@ -760,8 +787,13 @@ public class MainActivity extends AppCompatActivity {
         } else if (menu.equals("gameover") || menu.equals("2P_gameover")) {
             if (action == MotionEvent.ACTION_UP) {
                 if (X > w() - 80 && Y < 80) {
+                    //settings
                     previousMenu = menu;
                     menu = "settings";
+                } else if (X < 80 && Y < 80) {
+                    //shop
+                    previousMenu = menu;
+                    menu = "shop";
                 } else menu = "start";
             }
         }
@@ -899,6 +931,20 @@ public class MainActivity extends AppCompatActivity {
             canvas.drawLine(x+w*3/5*(float)Math.cos(angle+Math.PI/5), y-w*3/5*(float)Math.sin(angle+Math.PI/5),
                     x+w*(float)Math.cos(angle+2*Math.PI/5), y-w*(float)Math.sin(angle+2*Math.PI/5), p);
         }
+    }
+
+    private void drawShop(float x, float y, float w) {
+        Paint p = newPaint(Color.BLACK);
+        p.setStrokeWidth(convert854(2));
+        p.setStyle(Paint.Style.STROKE);
+
+        canvas.drawLine(x-w, y-w/2, x-w*.6f, y-w/2, p);
+        canvas.drawLine(x-w*.6f, y-w/2, x-w*.2f, y+w/3, p);
+        canvas.drawLine(x-w*.2f, y+w/3, x+w*.6f, y+w/3, p);
+        canvas.drawLine(x+w*.6f, y+w/3, x+w, y-w/3, p);
+        canvas.drawLine(x+w, y-w/3, x-w*.5f, y-w/3, p);
+        canvas.drawCircle(x-w*.2f, y+w*2/3, w/6, p);
+        canvas.drawCircle(x+w*.6f, y+w*2/3, w/6, p);
     }
 
     private Icon[] generateRow() {
