@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                                 Paint starCount = newPaint(Color.BLACK);
                                 starCount.setTextAlign(Paint.Align.RIGHT);
                                 starCount.setTextSize(convert854(40));
-                                canvas.drawText(getStars()+"", w()-80, h()-40-(starCount.ascent()+starCount.descent())/2, starCount);
+                                canvas.drawText(getStars()+"", w()-70, h()-40-(starCount.ascent()+starCount.descent())/2, starCount);
                             } else if (menu.equals("mode")){
                                 Paint modeText = newPaint(Color.BLACK);
                                 modeText.setTextAlign(Paint.Align.CENTER);
