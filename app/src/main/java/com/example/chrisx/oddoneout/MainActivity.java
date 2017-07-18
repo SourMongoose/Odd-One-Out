@@ -602,16 +602,6 @@ public class MainActivity extends AppCompatActivity {
                                 if (isHighScore) canvas.drawText(previousHigh+"", w()/2, h()/2+110, p);
                                 else canvas.drawText(getHighScore()+"", w()/2, h()/2+110, p);
 
-                                //display row
-                                for (int i = 0; i < row.length; i++) {
-                                    row[i].drawShape(canvas, w()/8+w()/4*i, rowPosition+w()/8, w()/4/(float)Math.sqrt(2)-10, getInvertColors().equals("on"));
-                                }
-                                //box the correct column
-                                Paint box = newPaint(Color.BLACK);
-                                box.setStyle(Paint.Style.STROKE);
-                                box.setStrokeWidth(3);
-                                canvas.drawRect(correctColumn*w()/4, h()-w()/4, (correctColumn+1)*w()/4, h(), box);
-
                                 p.setTextSize(30);
                                 p.setAlpha((int)(255*Math.abs(Math.sin((float)gameoverFrames/getTargetFPS()*60*2/180*Math.PI))));
                                 canvas.drawText("tap anywhere", w()/2, h()*3/4, p);
@@ -621,6 +611,20 @@ public class MainActivity extends AppCompatActivity {
                                 drawGear(w()-40, 40, 20);
                                 //shop
                                 drawCart(40, 40, 20);
+
+                                //fade-in effect (for 1 sec)
+                                int alpha = (int) (255 - 255f * Math.min(gameoverFrames, getTargetFPS()) / getTargetFPS());
+                                canvas.drawRect(-5, -5, w()+5, h()+5, newPaint(Color.argb(alpha,255,255,255)));
+
+                                //display row
+                                for (int i = 0; i < row.length; i++) {
+                                    row[i].drawShape(canvas, w()/8+w()/4*i, rowPosition+w()/8, w()/4/(float)Math.sqrt(2)-10, getInvertColors().equals("on"));
+                                }
+                                //box the correct column
+                                Paint box = newPaint(Color.BLACK);
+                                box.setStyle(Paint.Style.STROKE);
+                                box.setStrokeWidth(3);
+                                canvas.drawRect(correctColumn*w()/4, h()-w()/4, (correctColumn+1)*w()/4, h(), box);
 
                                 gameoverFrames++;
                             } else if (menu.equals("2P_gameover")) {
@@ -647,6 +651,10 @@ public class MainActivity extends AppCompatActivity {
                                 drawGear(w()-40, 40, 20);
                                 //shop
                                 drawCart(40, 40, 20);
+
+                                //fade-in effect (for 1 sec)
+                                int alpha = (int) (255 - 255f * Math.min(gameoverFrames, getTargetFPS()) / getTargetFPS());
+                                canvas.drawRect(-5, -5, w()+5, h()+5, newPaint(Color.argb(alpha,255,255,255)));
 
                                 gameoverFrames++;
                             }
@@ -815,7 +823,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         } else if (menu.equals("gameover") || menu.equals("2P_gameover")) {
-            if (action == MotionEvent.ACTION_UP) {
+            if (action == MotionEvent.ACTION_UP && gameoverFrames > getTargetFPS()) {
                 if (X > w() - 80 && Y < 80) {
                     //settings
                     previousMenu = menu;
