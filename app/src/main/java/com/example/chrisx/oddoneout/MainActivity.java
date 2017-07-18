@@ -2,12 +2,10 @@ package com.example.chrisx.oddoneout;
 
 /**
  * Organized in order of priority:
- * @TODO unlocking system for 2P (30+ score?/# of stars)
- * @TODO add back button to tutorial
+ * @TODO more icons/pairs (perhaps split into "packs")
+ * @TODO add purchasable themes (background/icon color)
  * @TODO smoother animation for game over screen (includes "New high score" notif)
  * @TODO make 2P game over screen look better
- * @TODO make 30/45 fps look smoother
- * @TODO more icons/pairs (perhaps split into "packs")
  * @TODO organize icons
  * @TODO update tutorial to make it look better
  * ...
@@ -155,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                                 //settings icon
                                 drawGear(w()-40, 40, 20);
                                 //shop
-                                drawShop(40, 40, 20);
+                                drawCart(40, 40, 20);
 
                                 Paint cover = newPaint(Color.WHITE);
                                 cover.setAlpha((int)(255*Math.min(1, startAnimation/(getTargetFPS()*2/3f))));
@@ -590,7 +588,7 @@ public class MainActivity extends AppCompatActivity {
                                 //settings
                                 drawGear(w()-40, 40, 20);
                                 //shop
-                                drawShop(40, 40, 20);
+                                drawCart(40, 40, 20);
 
                                 gameoverFrames++;
                             } else if (menu.equals("2P_gameover")) {
@@ -616,7 +614,7 @@ public class MainActivity extends AppCompatActivity {
                                 //settings
                                 drawGear(w()-40, 40, 20);
                                 //shop
-                                drawShop(40, 40, 20);
+                                drawCart(40, 40, 20);
 
                                 gameoverFrames++;
                             }
@@ -933,7 +931,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void drawShop(float x, float y, float w) {
+    private void drawCart(float x, float y, float w) {
         Paint p = newPaint(Color.BLACK);
         p.setStrokeWidth(convert854(2));
         p.setStyle(Paint.Style.STROKE);
