@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private String menu = "start";
     private String previousMenu;
 
+    private String pack = "default";
+
     //1P
     private long score;
     private boolean isHighScore;
@@ -90,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
     private static final float TARGET_FPS_HEIGHT = 175;
     private static final float INVERT_COLORS_HEIGHT = 350;
     private static final float SHOW_1V1_HEIGHT = 525;
+    //shop
+    private static final float ICON_PACKS_HEIGHT = 175;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -265,6 +269,12 @@ public class MainActivity extends AppCompatActivity {
                                 titleText.setTextAlign(Paint.Align.CENTER);
                                 titleText.setTextSize(convert854(50));
                                 canvas.drawText("shop", w()/2, convert854(75), titleText);
+
+                                Paint categoryText = newPaint(Color.BLACK);
+                                categoryText.setTextSize(convert854(40));
+
+                                //packs
+                                canvas.drawText("icon packs:", convert854(20), convert854(ICON_PACKS_HEIGHT), categoryText);
 
                                 //back button
                                 Icon backButton = new Icon(5, 270);
@@ -959,46 +969,11 @@ public class MainActivity extends AppCompatActivity {
             rowPosition = h()/2 - w()/8;
         }
 
-        /*
-         * Icon table (for reference):
-         * -----------
-         * 0  - circle
-         * 1  - square
-         * 2  - triangle (fit to square)
-         * 3  - cross (+)
-         * 4  - triangle (equilateral)
-         * 5  - arrow (upwards)
-         * 6  - circle w/ dot
-         * 7  - square w/ dot
-         * 8  - triangle w/ dot (equilateral)
-         * 9  - letter F
-         * 10 - letter G
-         * 11 - letter P
-         * 12 - letter R
-         * 13 - die (1)
-         * 14 - die (2)
-         * 15 - die (3)
-         * 16 - die (4)
-         * 17 - die (5)
-         * 18 - die (6)
-         * 19 - letter F (backwards)
-         * 20 - letter G (backwards)
-         * 21 - letter P (backwards)
-         * 22 - letter R (backwards)
-         * 23 - cross (x)
-         * 24 - letter N
-         * 25 - letter N (backwards)
-         */
-
-        int[][][] easyPairs = {{{0},{6}}, {{1},{7}}, {{4},{8}}, {{0},{1}}, {{1},{2}}, {{0},{2}},
-                {{3},{23}}, {{2},{2,180}}, {{5},{5,180}}, {{18},{18,90}}, {{16},{18}}, {{15},{17}}};
-        int[][][] mediumPairs = {{{14},{15}}, {{16},{17}}, {{5,90},{5,270}},
-                {{14},{14,90}}, {{15},{15,90}}, {{9},{19}}, {{10},{20}}, {{11},{21}},
-                {{12},{22}}, {{24},{25}}, {{24,90},{25,90}}};
-        int[][][] hardPairs = {{{3,0,-1},{3,0,1}}, {{4,0,-1},{4,0,1}}, {{5,0,-1},{5,0,1}},
-                {{8,0,-1},{8,0,1}}, {{13,0,-1},{13,0,1}}, {{14,0,-1},{14,0,1}}, {{15,0,-1},{15,0,1}},
-                {{16,0,-1},{16,0,1}}, {{17,0,-1},{17,0,1}}, {{18,0,-1},{18,0,1}}, {{5,0,1},{5,180,1}}};
-        int[][][] hardMirror = {{{9},{19}}, {{10},{20}}, {{11},{21}}, {{12},{22}}};
+        Pack activePack = new Pack(pack);
+        int[][][] easyPairs = activePack.getEasyPairs(),
+                mediumPairs = activePack.getMediumPairs(),
+                hardPairs = activePack.getHardPairs(),
+                hardMirror = activePack.getHardMirror();
 
         //adjust icon rotational speed to selected fps
         int rotateSpeed = 316 / getTargetFPS();
