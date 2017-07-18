@@ -1,5 +1,10 @@
 package com.example.chrisx.oddoneout;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import java.lang.Math;
+
 public class Pack {
     private String name;
 
@@ -13,9 +18,34 @@ public class Pack {
 
     public String description() {
         switch(name) {
-            case "letter": return "The letters of the English alphabet. But some are flipped.";
+            case "letter": return "The letters of the English alphabet.";
             default: return "Shapes and stuff.";
         }
+    }
+
+    public void drawPack(Canvas c, float x, float y, float w, boolean inverted) {
+        float strokeWidth = c.getWidth()/240;
+
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        p.setColor(inverted ? Color.WHITE : Color.BLACK);
+        p.setStrokeWidth(strokeWidth);
+        p.setStyle(Paint.Style.STROKE);
+
+        c.save();
+        c.translate(x, y);
+
+        if (name.equals("letter")) {
+            c.drawLine(-w/2, w/2, 0, -w/2, p);
+            c.drawLine(0, -w/2, w/2, w/2, p);
+            c.drawLine(-w/4, 0, w/4, 0, p);
+        } else {
+            //default pack
+            c.drawCircle(0, 0, w/2, p);
+            float tmp = (float)(w/2 / Math.sqrt(2));
+            c.drawRect(-tmp, -tmp, tmp, tmp, p);
+        }
+
+        c.restore();
     }
 
     /*

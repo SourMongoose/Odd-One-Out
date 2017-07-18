@@ -272,9 +272,31 @@ public class MainActivity extends AppCompatActivity {
 
                                 Paint categoryText = newPaint(Color.BLACK);
                                 categoryText.setTextSize(convert854(40));
+                                Paint border = newPaint(Color.BLACK);
+                                border.setStyle(Paint.Style.STROKE);
+                                border.setStrokeWidth(convert854(2));
+                                Paint locked = newPaint(getInvertColors().equals("off") ? Color.argb(200,255,255,255) : Color.argb(150,255,255,255));
+                                Paint costText = newPaint(Color.BLACK);
+                                costText.setTextAlign(Paint.Align.CENTER);
 
                                 //packs
                                 canvas.drawText("icon packs:", convert854(20), convert854(ICON_PACKS_HEIGHT), categoryText);
+                                Pack[] packs = {new Pack("default"), new Pack("letter")};
+                                float boxWidth = (w()-5*convert854(20))/4;
+                                costText.setTextSize(boxWidth/3.5f);
+                                for (int i = 0; i < packs.length; i++) {
+                                    float lx = convert854(20) + i * (boxWidth + convert854(20));
+                                    float ly = ICON_PACKS_HEIGHT + convert854(30);
+                                    if (pack.equals(packs[i].getName())) canvas.drawRect(lx, ly, lx+boxWidth, ly+boxWidth, border);
+                                    packs[i].drawPack(canvas, lx+boxWidth/2, ly+boxWidth/2, boxWidth-convert854(40), getInvertColors().equals("on"));
+
+                                    //check if unlocked
+                                    if (!ownsPack(packs[i].getName())) {
+                                        canvas.drawRect(lx, ly, lx+boxWidth, ly+boxWidth, locked);
+                                        canvas.drawText("100", lx+boxWidth/2, ly+boxWidth*9/16, costText);
+                                        drawStar(lx+boxWidth/2, ly+boxWidth*3/4, boxWidth/8);
+                                    }
+                                }
 
                                 //back button
                                 Icon backButton = new Icon(5, 270);
@@ -861,6 +883,11 @@ public class MainActivity extends AppCompatActivity {
 
     private String getShow1v1() {
         return sharedPref.getString("show_1v1", "off");
+    }
+
+    private boolean ownsPack(String p) {
+        if (p.equals("default")) return true;
+        return sharedPref.getBoolean("owns_"+p, false);
     }
 
     private void draw2PScores() {
