@@ -4,7 +4,6 @@ package com.example.chrisx.oddoneout;
  * Organized in order of priority:
  * @TODO more icons/pairs (perhaps split into "packs")
  * @TODO add purchasable themes (background/icon color)
- * @TODO smoother animation for game over screen (includes "New high score" notif)
  * @TODO make 2P game over screen look better
  * @TODO organize icons
  * @TODO update tutorial to make it look better
