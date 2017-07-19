@@ -23,6 +23,10 @@ public class Pack {
         }
     }
 
+    public int cost() {
+        return 100;
+    }
+
     public void drawPack(Canvas c, float x, float y, float w, boolean inverted) {
         float strokeWidth = c.getWidth()/240;
 

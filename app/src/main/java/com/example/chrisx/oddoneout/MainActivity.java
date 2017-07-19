@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private String previousMenu;
 
     private String pack = "default";
+    private String previousPack;
 
     //1P
     private long score;
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
     private static final float SHOW_1V1_HEIGHT = 525;
     //shop
     private static final float ICON_PACKS_HEIGHT = 175;
+    private Pack[] packs = {new Pack("default"), new Pack("letter")};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -280,7 +282,6 @@ public class MainActivity extends AppCompatActivity {
 
                                 //packs
                                 canvas.drawText("icon packs:", convert854(20), convert854(ICON_PACKS_HEIGHT), categoryText);
-                                Pack[] packs = {new Pack("default"), new Pack("letter")};
                                 float boxWidth = (w()-5*convert854(20))/4;
                                 costText.setTextSize(boxWidth/3.5f);
                                 for (int i = 0; i < packs.length; i++) {
@@ -292,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
                                     //check if unlocked
                                     if (!ownsPack(packs[i].getName())) {
                                         canvas.drawRect(lx, ly, lx+boxWidth, ly+boxWidth, locked);
-                                        canvas.drawText("100", lx+boxWidth/2, ly+boxWidth*9/16, costText);
+                                        canvas.drawText(packs[i].cost()+"", lx+boxWidth/2, ly+boxWidth*9/16, costText);
                                         drawStar(lx+boxWidth/2, ly+boxWidth*3/4, boxWidth/8);
                                     }
                                 }
@@ -406,10 +407,11 @@ public class MainActivity extends AppCompatActivity {
                                         } else {
                                             menu = "transition";
                                             transitionFrames = 0;
+                                            previousPack = pack;
                                             if (score > getHighScore()) {
                                                 isHighScore = true;
                                                 previousHigh = getHighScore();
-                                                editor.putInt("high_score", (int) score);
+                                                editor.putInt(pack+"_high_score", (int) score);
                                                 editor.apply();
                                             } else isHighScore = false;
                                         }
@@ -599,7 +601,7 @@ public class MainActivity extends AppCompatActivity {
                                 p.setTextSize(70);
                                 canvas.drawText(score+"", w()/2, h()/2-5, p);
                                 if (isHighScore) canvas.drawText(previousHigh+"", w()/2, h()/2+110, p);
-                                else canvas.drawText(getHighScore()+"", w()/2, h()/2+110, p);
+                                else canvas.drawText(getHighScore(previousPack)+"", w()/2, h()/2+110, p);
 
                                 p.setTextSize(30);
                                 p.setAlpha((int)(255*Math.abs(Math.sin((float)gameoverFrames/getTargetFPS()*60*2/180*Math.PI))));
@@ -766,6 +768,24 @@ public class MainActivity extends AppCompatActivity {
             if (action == MotionEvent.ACTION_UP) {
                 if (X < 120 && Y > h() - 80) {
                     menu = previousMenu;
+                } else {
+                    float boxWidth = (w() - 5 * convert854(20)) / 4;
+                    for (int i = 0; i < packs.length; i++) {
+                        float lx = convert854(20) + i * (boxWidth + convert854(20));
+                        float ly = ICON_PACKS_HEIGHT + convert854(30);
+
+                        if (X > lx && X < lx+boxWidth && Y > ly && Y < ly+boxWidth) {
+                            if (!ownsPack(packs[i].getName())) {
+                                if (getStars() >= packs[i].cost()) {
+                                    editor.putBoolean("owns_"+packs[i].getName(), true);
+                                    editor.putInt("stars", getStars()-100);
+                                    editor.apply();
+                                }
+                            } else {
+                                pack = packs[i].getName();
+                            }
+                        }
+                    }
                 }
             }
         } else if (menu.equals("mode")){
@@ -873,7 +893,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int getHighScore() {
-        return sharedPref.getInt("high_score", 0);
+        return sharedPref.getInt(pack+"_high_score", 0);
+    }
+
+    private int getHighScore(String p) {
+        return sharedPref.getInt(p+"_high_score", 0);
     }
 
     private int getStars() {
