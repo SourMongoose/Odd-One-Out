@@ -777,7 +777,7 @@ public class MainActivity extends AppCompatActivity {
                             if (!ownsPack(packs[i].getName())) {
                                 if (getStars() >= packs[i].cost()) {
                                     editor.putBoolean("owns_"+packs[i].getName(), true);
-                                    editor.putInt("stars", getStars()-100);
+                                    editor.putInt("stars", getStars()-packs[i].cost());
                                     editor.apply();
                                 }
                             } else {
