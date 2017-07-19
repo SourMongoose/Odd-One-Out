@@ -53,34 +53,26 @@ class Pack {
     }
 
     /*
-     * Icon table (for reference):
+     * Icon table:
      * -----------
      * 0  - circle
-     * 1  - square
-     * 2  - triangle (fit to square)
-     * 3  - cross (+)
+     * 1  - circle w/ dot
+     * 2  - square
+     * 3  - square w/ dot
      * 4  - triangle (equilateral)
-     * 5  - arrow (upwards)
-     * 6  - circle w/ dot
-     * 7  - square w/ dot
-     * 8  - triangle w/ dot (equilateral)
-     * 9  - letter F
-     * 10 - letter G
-     * 11 - letter P
-     * 12 - letter R
-     * 13 - die (1)
-     * 14 - die (2)
-     * 15 - die (3)
-     * 16 - die (4)
-     * 17 - die (5)
-     * 18 - die (6)
-     * 19 - letter F (backwards)
-     * 20 - letter G (backwards)
-     * 21 - letter P (backwards)
-     * 22 - letter R (backwards)
-     * 23 - cross (x)
-     * 24 - letter N
-     * 25 - letter N (backwards)
+     * 5  - triangle w/ dot (equilateral)
+     * 6  - triangle (fit to square)
+     * 7  - cross (+)
+     * 8  - cross (x)
+     * 9  - arrow (upwards)
+     * 10 - die (1)
+     * 11 - die (2)
+     * 12 - die (3)
+     * 13 - die (4)
+     * 14 - die (5)
+     * 15 - die (6)
+     * 16-20 - letter F, G, P, R, N
+     * 21-25 - letter F, G, P, R, N (backwards)
      */
 
     int[][][] getEasyPairs() {
@@ -88,8 +80,8 @@ class Pack {
             int[][][] easyPairs = {};
             return easyPairs;
         } else {
-            int[][][] easyPairs = {{{0},{6}}, {{1},{7}}, {{4},{8}}, {{0},{1}}, {{1},{2}}, {{0},{2}},
-                    {{3},{23}}, {{2},{2,180}}, {{5},{5,180}}, {{18},{18,90}}, {{16},{18}}, {{15},{17}}};
+            int[][][] easyPairs = {{{0},{1}}, {{2},{3}}, {{4},{5}}, {{0},{2}}, {{2},{6}}, {{0},{6}},
+                    {{7},{8}}, {{6},{6,180}}, {{9},{9,180}}, {{15},{15,90}}, {{13},{15}}, {{12},{14}}};
             return easyPairs;
         }
     }
@@ -99,9 +91,9 @@ class Pack {
             int[][][] mediumPairs = {};
             return mediumPairs;
         } else {
-            int[][][] mediumPairs = {{{14},{15}}, {{16},{17}}, {{5,90},{5,270}},
-                    {{14},{14,90}}, {{15},{15,90}}, {{9},{19}}, {{10},{20}}, {{11},{21}},
-                    {{12},{22}}, {{24},{25}}, {{24,90},{25,90}}};
+            int[][][] mediumPairs = {{{11},{12}}, {{13},{14}}, {{9,90},{9,270}},
+                    {{11},{11,90}}, {{12},{12,90}}, {{16},{21}}, {{17},{22}}, {{18},{23}},
+                    {{19},{24}}, {{20},{25}}, {{20,90},{25,90}}};
             return mediumPairs;
         }
     }
@@ -111,9 +103,9 @@ class Pack {
             int[][][] hardPairs = {};
             return hardPairs;
         } else {
-            int[][][] hardPairs = {{{3,0,-1},{3,0,1}}, {{4,0,-1},{4,0,1}}, {{5,0,-1},{5,0,1}},
-                    {{8,0,-1},{8,0,1}}, {{13,0,-1},{13,0,1}}, {{14,0,-1},{14,0,1}}, {{15,0,-1},{15,0,1}},
-                    {{16,0,-1},{16,0,1}}, {{17,0,-1},{17,0,1}}, {{18,0,-1},{18,0,1}}, {{5,0,1},{5,180,1}}};
+            int[][][] hardPairs = {{{7,0,-1},{7,0,1}}, {{4,0,-1},{4,0,1}}, {{9,0,-1},{9,0,1}},
+                    {{5,0,-1},{5,0,1}}, {{10,0,-1},{10,0,1}}, {{11,0,-1},{11,0,1}}, {{12,0,-1},{12,0,1}},
+                    {{13,0,-1},{13,0,1}}, {{14,0,-1},{14,0,1}}, {{15,0,-1},{15,0,1}}, {{9,0,1},{9,180,1}}};
             return hardPairs;
         }
     }
@@ -123,7 +115,7 @@ class Pack {
             int[][][] hardMirror = {};
             return hardMirror;
         } else {
-            int[][][] hardMirror = {{{9},{19}}, {{10},{20}}, {{11},{21}}, {{12},{22}}};
+            int[][][] hardMirror = {{{16},{21}}, {{17},{22}}, {{18},{23}}, {{19},{24}}};
             return hardMirror;
         }
     }

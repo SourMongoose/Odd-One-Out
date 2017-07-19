@@ -5,7 +5,6 @@ package com.example.chrisx.oddoneout;
  * @TODO more icons/pairs (perhaps split into "packs")
  * @TODO add purchasable themes (background/icon color)
  * @TODO make 2P game over screen look better
- * @TODO organize icons
  * @TODO update tutorial to make it look better
  * ...
  * @TODO extreme?
@@ -263,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
                                 else if (getShow1v1().equals("off")) canvas.drawRect(w()/4+convert854(20), convert854(SHOW_1V1_HEIGHT+30), w()*2/4-convert854(20), convert854(SHOW_1V1_HEIGHT+90), boxPaint);
 
                                 //back button
-                                Icon backButton = new Icon(5, 270);
+                                Icon backButton = new Icon(9, 270);
                                 backButton.drawShape(canvas, 60, h()-40, 60, getInvertColors().equals("on"));
                             } else if (menu.equals("shop")) {
                                 Paint titleText = newPaint(Color.BLACK);
@@ -299,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
 
                                 //back button
-                                Icon backButton = new Icon(5, 270);
+                                Icon backButton = new Icon(9, 270);
                                 backButton.drawShape(canvas, 60, h()-40, 60, getInvertColors().equals("on"));
 
                                 //show number of stars

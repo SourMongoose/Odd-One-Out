@@ -60,20 +60,19 @@ class Icon {
         if (id == 0) {
             c.drawCircle(0, 0, w/2, p);
         }
-        //square
+        //circle with dot
         if (id == 1) {
+            c.drawCircle(0, 0, w/2, p);
+            c.drawCircle(0, 0, strokeWidth*2, p2);
+        }
+        //square
+        if (id == 2) {
             c.drawRect(-w/2, -w/2, w/2, w/2, p);
         }
-        //triangle (fit to square)
-        if (id == 2) {
-            c.drawLine(-w/2, w/2, 0, -w/2, p);
-            c.drawLine(0, -w/2, w/2, w/2, p);
-            c.drawLine(w/2, w/2, -w/2, w/2, p);
-        }
-        //cross (+)
+        //square with dot
         if (id == 3) {
-            c.drawLine(-w/2, 0, w/2, 0, p);
-            c.drawLine(0, -w/2, 0, w/2, p);
+            c.drawRect(-w/2, -w/2, w/2, w/2, p);
+            c.drawCircle(0, 0, strokeWidth*2, p2);
         }
         //triangle (equilateral)
         if (id == 4) {
@@ -82,79 +81,56 @@ class Icon {
             c.drawLine(0, -w/a, w/2, w/2/a, p);
             c.drawLine(w/2, w/2/a, -w/2, w/2/a, p);
         }
-        //arrow (upwards)
-        if (id == 5) {
-            c.drawLine(0, -w/2, 0, w/2, p);
-            c.drawLine(0, -w/2, -w/6, -w/3, p);
-            c.drawLine(0, -w/2, w/6, -w/3, p);
-        }
-        //circle with dot
-        if (id == 6) {
-            c.drawCircle(0, 0, w/2, p);
-            c.drawCircle(0, 0, strokeWidth*2, p2);
-        }
-        //square with dot
-        if (id == 7) {
-            c.drawRect(-w/2, -w/2, w/2, w/2, p);
-            c.drawCircle(0, 0, strokeWidth*2, p2);
-        }
         //triangle (equilateral) with dot
-        if (id == 8) {
+        if (id == 5) {
             float a = (float) Math.sqrt(3);
             c.drawLine(-w/2, w/2/a, 0, -w/a, p);
             c.drawLine(0, -w/a, w/2, w/2/a, p);
             c.drawLine(w/2, w/2/a, -w/2, w/2/a, p);
             c.drawCircle(0, 0, strokeWidth*2, p2);
         }
-        //letter F
+        //triangle (fit to square)
+        if (id == 6) {
+            c.drawLine(-w/2, w/2, 0, -w/2, p);
+            c.drawLine(0, -w/2, w/2, w/2, p);
+            c.drawLine(w/2, w/2, -w/2, w/2, p);
+        }
+        //cross (+)
+        if (id == 7) {
+            c.drawLine(-w/2, 0, w/2, 0, p);
+            c.drawLine(0, -w/2, 0, w/2, p);
+        }
+        //cross (x)
+        if (id == 8) {
+            c.drawLine(-w/2, -w/2, w/2, w/2, p);
+            c.drawLine(-w/2, w/2, w/2, -w/2, p);
+        }
+        //arrow (upwards)
         if (id == 9) {
-            c.drawLine(-w/2, -w/2, w/2, -w/2, p);
-            c.drawLine(-w/2, -w/2, -w/2, w/2, p);
-            c.drawLine(-w/2, 0, w/2, 0, p);
-        }
-        //letter G
-        if (id == 10) {
-            c.drawLine(-w/2, -w/2, w/2, -w/2, p);
-            c.drawLine(-w/2, -w/2, -w/2, w/2, p);
-            c.drawLine(-w/2, w/2, w/2, w/2, p);
-            c.drawLine(w/2, w/2, w/2, 0, p);
-            c.drawLine(w/2, 0, 0, 0, p);
-        }
-        //letter P
-        if (id == 11) {
-            c.drawLine(-w/2, -w/2, w/2, -w/2, p);
-            c.drawLine(-w/2, -w/2, -w/2, w/2, p);
-            c.drawLine(-w/2, 0, w/2, 0, p);
-            c.drawLine(w/2, 0, w/2, -w/2, p);
-        }
-        //letter R
-        if (id == 12) {
-            c.drawLine(-w/2, -w/2, w/2, -w/2, p);
-            c.drawLine(-w/2, -w/2, -w/2, w/2, p);
-            c.drawLine(-w/2, 0, w/2, 0, p);
-            c.drawLine(w/2, 0, w/2, -w/2, p);
-            c.drawLine(-w/2, 0, w/2, w/2, p);
+            c.drawLine(0, -w/2, 0, w/2, p);
+            c.drawLine(0, -w/2, -w/6, -w/3, p);
+            c.drawLine(0, -w/2, w/6, -w/3, p);
         }
         //die (1)
-        if (id == 13) {
+        if (id == 10) {
             c.drawRect(-w/2, -w/2, w/2, w/2, p);
             c.drawCircle(0, 0, strokeWidth*3, p2);
         }
         //die (2)
-        if (id == 14) {
+        if (id == 11) {
             c.drawRect(-w/2, -w/2, w/2, w/2, p);
             c.drawCircle(-w/4, -w/4, strokeWidth*3, p2);
             c.drawCircle(w/4, w/4, strokeWidth*3, p2);
         }
         //die (3)
-        if (id == 15) {
+        if (id == 12) {
             c.drawRect(-w/2, -w/2, w/2, w/2, p);
             c.drawCircle(-w/4, -w/4, strokeWidth*3, p2);
             c.drawCircle(w/4, w/4, strokeWidth*3, p2);
             c.drawCircle(0, 0, strokeWidth*3, p2);
         }
         //die (4)
-        if (id == 16) {
+        if (id == 13) {
             c.drawRect(-w/2, -w/2, w/2, w/2, p);
             c.drawCircle(-w/4, -w/4, strokeWidth*3, p2);
             c.drawCircle(w/4, w/4, strokeWidth*3, p2);
@@ -162,7 +138,7 @@ class Icon {
             c.drawCircle(-w/4, w/4, strokeWidth*3, p2);
         }
         //die (5)
-        if (id == 17) {
+        if (id == 14) {
             c.drawRect(-w/2, -w/2, w/2, w/2, p);
             c.drawCircle(-w/4, -w/4, strokeWidth*3, p2);
             c.drawCircle(w/4, w/4, strokeWidth*3, p2);
@@ -171,7 +147,7 @@ class Icon {
             c.drawCircle(0, 0, strokeWidth*3, p2);
         }
         //die (6)
-        if (id == 18) {
+        if (id == 15) {
             c.drawRect(-w/2, -w/2, w/2, w/2, p);
             c.drawCircle(-w/4, -w/4, strokeWidth*3, p2);
             c.drawCircle(w/4, w/4, strokeWidth*3, p2);
@@ -180,14 +156,49 @@ class Icon {
             c.drawCircle(-w/4, 0, strokeWidth*3, p2);
             c.drawCircle(w/4, 0, strokeWidth*3, p2);
         }
-        //letter F (backwards)
+        //letter F
+        if (id == 16) {
+            c.drawLine(-w/2, -w/2, w/2, -w/2, p);
+            c.drawLine(-w/2, -w/2, -w/2, w/2, p);
+            c.drawLine(-w/2, 0, w/2, 0, p);
+        }
+        //letter G
+        if (id == 17) {
+            c.drawLine(-w/2, -w/2, w/2, -w/2, p);
+            c.drawLine(-w/2, -w/2, -w/2, w/2, p);
+            c.drawLine(-w/2, w/2, w/2, w/2, p);
+            c.drawLine(w/2, w/2, w/2, 0, p);
+            c.drawLine(w/2, 0, 0, 0, p);
+        }
+        //letter P
+        if (id == 18) {
+            c.drawLine(-w/2, -w/2, w/2, -w/2, p);
+            c.drawLine(-w/2, -w/2, -w/2, w/2, p);
+            c.drawLine(-w/2, 0, w/2, 0, p);
+            c.drawLine(w/2, 0, w/2, -w/2, p);
+        }
+        //letter R
         if (id == 19) {
+            c.drawLine(-w/2, -w/2, w/2, -w/2, p);
+            c.drawLine(-w/2, -w/2, -w/2, w/2, p);
+            c.drawLine(-w/2, 0, w/2, 0, p);
+            c.drawLine(w/2, 0, w/2, -w/2, p);
+            c.drawLine(-w/2, 0, w/2, w/2, p);
+        }
+        //letter N
+        if (id == 20) {
+            c.drawLine(-w/2, w/2, -w/2, -w/2, p);
+            c.drawLine(-w/2, -w/2, w/2, w/2, p);
+            c.drawLine(w/2, w/2, w/2, -w/2, p);
+        }
+        //letter F (backwards)
+        if (id == 21) {
             c.drawLine(w/2, -w/2, -w/2, -w/2, p);
             c.drawLine(w/2, -w/2, w/2, w/2, p);
             c.drawLine(w/2, 0, -w/2, 0, p);
         }
         //letter G (backwards)
-        if (id == 20) {
+        if (id == 22) {
             c.drawLine(w/2, -w/2, -w/2, -w/2, p);
             c.drawLine(w/2, -w/2, w/2, w/2, p);
             c.drawLine(w/2, w/2, -w/2, w/2, p);
@@ -195,30 +206,19 @@ class Icon {
             c.drawLine(-w/2, 0, 0, 0, p);
         }
         //letter P (backwards)
-        if (id == 21) {
+        if (id == 23) {
             c.drawLine(w/2, -w/2, -w/2, -w/2, p);
             c.drawLine(w/2, -w/2, w/2, w/2, p);
             c.drawLine(w/2, 0, -w/2, 0, p);
             c.drawLine(-w/2, 0, -w/2, -w/2, p);
         }
         //letter R (backwards)
-        if (id == 22) {
+        if (id == 24) {
             c.drawLine(w/2, -w/2, -w/2, -w/2, p);
             c.drawLine(w/2, -w/2, w/2, w/2, p);
             c.drawLine(w/2, 0, -w/2, 0, p);
             c.drawLine(-w/2, 0, -w/2, -w/2, p);
             c.drawLine(w/2, 0, -w/2, w/2, p);
-        }
-        //cross (x)
-        if (id == 23) {
-            c.drawLine(-w/2, -w/2, w/2, w/2, p);
-            c.drawLine(-w/2, w/2, w/2, -w/2, p);
-        }
-        //letter N
-        if (id == 24) {
-            c.drawLine(-w/2, w/2, -w/2, -w/2, p);
-            c.drawLine(-w/2, -w/2, w/2, w/2, p);
-            c.drawLine(w/2, w/2, w/2, -w/2, p);
         }
         //letter N (backwards)
         if (id == 25) {
