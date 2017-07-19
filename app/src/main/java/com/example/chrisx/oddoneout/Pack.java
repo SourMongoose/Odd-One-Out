@@ -5,29 +5,29 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import java.lang.Math;
 
-public class Pack {
+class Pack {
     private String name;
 
-    public Pack(String name) {
+    Pack(String name) {
         this.name = name;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public String description() {
+    String description() {
         switch(name) {
             case "letter": return "The letters of the English alphabet.";
             default: return "Shapes and stuff.";
         }
     }
 
-    public int cost() {
+    int cost() {
         return 100;
     }
 
-    public void drawPack(Canvas c, float x, float y, float w, boolean inverted) {
+    void drawPack(Canvas c, float x, float y, float w, boolean inverted) {
         float strokeWidth = c.getWidth()/240;
 
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -83,7 +83,7 @@ public class Pack {
      * 25 - letter N (backwards)
      */
 
-    public int[][][] getEasyPairs() {
+    int[][][] getEasyPairs() {
         if (name.equals("letter")) {
             int[][][] easyPairs = {};
             return easyPairs;
@@ -94,7 +94,7 @@ public class Pack {
         }
     }
 
-    public int[][][] getMediumPairs() {
+    int[][][] getMediumPairs() {
         if (name.equals("letter")) {
             int[][][] mediumPairs = {};
             return mediumPairs;
@@ -106,7 +106,7 @@ public class Pack {
         }
     }
 
-    public int[][][] getHardPairs() {
+    int[][][] getHardPairs() {
         if (name.equals("letter")) {
             int[][][] hardPairs = {};
             return hardPairs;
@@ -118,7 +118,7 @@ public class Pack {
         }
     }
 
-    public int[][][] getHardMirror() {
+    int[][][] getHardMirror() {
         if (name.equals("letter")) {
             int[][][] hardMirror = {};
             return hardMirror;

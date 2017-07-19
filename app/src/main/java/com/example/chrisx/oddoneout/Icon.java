@@ -4,44 +4,44 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-public class Icon {
+class Icon {
     private int id;
     private float angle;
     private float rotateSpeed;
 
-    public Icon(int id) {
+    Icon(int id) {
         this.id = id;
         this.angle = this.rotateSpeed = 0;
     }
-    public Icon(int id, float angle) {
+    Icon(int id, float angle) {
         this.id = id;
         this.angle = angle;
         this.rotateSpeed = 0;
     }
-    public Icon(int id, float angle, float rotateSpeed) {
+    Icon(int id, float angle, float rotateSpeed) {
         this.id = id;
         this.angle = angle;
         this.rotateSpeed = rotateSpeed;
     }
 
-    public int getID() {
+    int getID() {
         return id;
     }
 
-    public float getAngle() {
+    float getAngle() {
         return angle;
     }
 
-    public void setAngle(float angle) {
+    void setAngle(float angle) {
         this.angle = angle;
     }
 
-    public void rotate(float angle) {
+    void rotate(float angle) {
         setAngle((this.angle + angle + 360) % 360);
     }
 
     //draws the icon within a square of center (x,y) and side length w
-    public void drawShape(Canvas c, float x, float y, float w, boolean inverted) {
+    void drawShape(Canvas c, float x, float y, float w, boolean inverted) {
         float strokeWidth = c.getWidth()/240;
 
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
