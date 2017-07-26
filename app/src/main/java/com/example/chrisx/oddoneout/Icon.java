@@ -158,75 +158,97 @@ class Icon {
             c.drawCircle(-w/2, 0, strokeWidth*3, p2);
             c.drawCircle(w/2, 0, strokeWidth*3, p2);
         }
-        //letter F
+        /*  __
+         * | /
+         * |
+         */
         if (id == 16) {
+            c.drawLine(-w, w, -w, -w, p);
             c.drawLine(-w, -w, w, -w, p);
-            c.drawLine(-w, -w, -w, w, p);
-            c.drawLine(-w, 0, w, 0, p);
+            c.drawLine(w, -w, 0, 0, p);
         }
-        //letter G
+        /* 
+         * |
+         * |_\
+         */
         if (id == 17) {
-            c.drawLine(-w, -w, w, -w, p);
             c.drawLine(-w, -w, -w, w, p);
             c.drawLine(-w, w, w, w, p);
-            c.drawLine(w, w, w, 0, p);
-            c.drawLine(w, 0, 0, 0, p);
+            c.drawLine(w, w, 0, 0, p);
         }
-        //letter P
+        /*  ___
+         * |_|
+         * |
+         */
         if (id == 18) {
-            c.drawLine(-w, -w, w, -w, p);
-            c.drawLine(-w, -w, -w, w, p);
-            c.drawLine(-w, 0, w, 0, p);
-            c.drawLine(w, 0, w, -w, p);
+            c.drawRect(-w, -w, 0, 0, p);
+            c.drawLine(-w, 0, -w, w, p);
+            c.drawLine(0, -w, w, -w, p);
         }
-        //letter R
+        //swirl
         if (id == 19) {
             c.drawLine(-w, -w, w, -w, p);
-            c.drawLine(-w, -w, -w, w, p);
-            c.drawLine(-w, 0, w, 0, p);
-            c.drawLine(w, 0, w, -w, p);
-            c.drawLine(-w, 0, w, w, p);
-        }
-        //letter N
-        if (id == 20) {
-            c.drawLine(-w, w, -w, -w, p);
-            c.drawLine(-w, -w, w, w, p);
-            c.drawLine(w, w, w, -w, p);
-        }
-        //letter F (backwards)
-        if (id == 21) {
-            c.drawLine(w, -w, -w, -w, p);
-            c.drawLine(w, -w, w, w, p);
-            c.drawLine(w, 0, -w, 0, p);
-        }
-        //letter G (backwards)
-        if (id == 22) {
-            c.drawLine(w, -w, -w, -w, p);
             c.drawLine(w, -w, w, w, p);
             c.drawLine(w, w, -w, w, p);
-            c.drawLine(-w, w, -w, 0, p);
-            c.drawLine(-w, 0, 0, 0, p);
+            c.drawLine(-w, w, -w, -w/2, p);
+            c.drawLine(-w, -w/2, w/2, -w/2, p);
+            c.drawLine(w/2, -w/2, w/2, w/2, p);
+            c.drawLine(w/2, w/2, -w/2, w/2, p);
+            c.drawLine(-w/2, w/2, -w/2, 0, p);
+            c.drawLine(-w/2, 0, 0, 0, p);
         }
-        //letter P (backwards)
-        if (id == 23) {
-            c.drawLine(w, -w, -w, -w, p);
-            c.drawLine(w, -w, w, w, p);
+        //hourglass (UL-BR)
+        if (id == 20) {
+            c.drawLine(-w, 0, 0, -w, p);
+            c.drawLine(0, -w, 0, w, p);
+            c.drawLine(0, w, w, 0, p);
             c.drawLine(w, 0, -w, 0, p);
-            c.drawLine(-w, 0, -w, -w, p);
         }
-        //letter R (backwards)
+        /*  __
+         * \  |
+         *    |
+         */
+        if (id == 21) {
+            c.drawLine(w, w, w, -w, p);
+            c.drawLine(w, -w, -w, -w, p);
+            c.drawLine(-w, -w, 0, 0, p);
+        }
+        /* 
+         *    |
+         * /__|
+         */
+        if (id == 22) {
+            c.drawLine(w, -w, w, w, p);
+            c.drawLine(w, w, -w, w, p);
+            c.drawLine(-w, w, 0, 0, p);
+        }
+        /*  ___
+         *   |_|
+         *     |
+         */
+        if (id == 23) {
+            c.drawRect(0, w, w, 0, p);
+            c.drawLine(w, 0, w, w, p);
+            c.drawLine(0, -w, -w, -w, p);
+        }
+        //swirl (backwards)
         if (id == 24) {
             c.drawLine(w, -w, -w, -w, p);
-            c.drawLine(w, -w, w, w, p);
-            c.drawLine(w, 0, -w, 0, p);
-            c.drawLine(-w, 0, -w, -w, p);
-            c.drawLine(w, 0, -w, w, p);
+            c.drawLine(-w, -w, -w, w, p);
+            c.drawLine(-w, w, w, w, p);
+            c.drawLine(w, w, w, -w/2, p);
+            c.drawLine(w, -w/2, -w/2, -w/2, p);
+            c.drawLine(-w/2, -w/2, -w/2, w/2, p);
+            c.drawLine(-w/2, w/2, w/2, w/2, p);
+            c.drawLine(w/2, w/2, w/2, 0, p);
+            c.drawLine(w/2, 0, 0, 0, p);
         }
-        //letter N (backwards)
+        //hourglass (BL-UR)
         if (id == 25) {
-            c.drawLine(w, w, w, -w, p);
-            c.drawLine(w, -w, -w, w, p);
-            c.drawLine(-w, w, -w, -w, p);
+            c.drawLine(w, 0, 0, -w, p);
+            c.drawLine(0, -w, 0, w, p);
+            c.drawLine(0, w, -w, 0, p);
+            c.drawLine(-w, 0, w, 0, p);
         }
 
         //A
