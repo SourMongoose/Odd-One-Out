@@ -204,30 +204,30 @@ class Icon {
             c.drawLine(0, w, w, 0, p);
             c.drawLine(w, 0, -w, 0, p);
         }
-        /*  __
-         * \  |
-         *    |
+        /*  ___
+         * |
+         * |/
          */
         if (id == 21) {
-            c.drawLine(w, w, w, -w, p);
-            c.drawLine(w, -w, -w, -w, p);
-            c.drawLine(-w, -w, 0, 0, p);
+            c.drawLine(-w, w, -w, -w, p);
+            c.drawLine(-w, -w, w, -w, p);
+            c.drawLine(-w, w, 0, 0, p);
         }
         /* 
-         *    |
-         * /__|
+         * |\
+         * |__
          */
         if (id == 22) {
-            c.drawLine(w, -w, w, w, p);
-            c.drawLine(w, w, -w, w, p);
-            c.drawLine(-w, w, 0, 0, p);
+            c.drawLine(-w, -w, -w, w, p);
+            c.drawLine(-w, w, w, w, p);
+            c.drawLine(-w, -w, 0, 0, p);
         }
         /*  ___
          *   |_|
          *     |
          */
         if (id == 23) {
-            c.drawRect(0, w, w, 0, p);
+            c.drawRect(0, -w, w, 0, p);
             c.drawLine(w, 0, w, w, p);
             c.drawLine(0, -w, -w, -w, p);
         }
