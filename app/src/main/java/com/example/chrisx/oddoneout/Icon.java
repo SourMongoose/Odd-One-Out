@@ -3,6 +3,7 @@ package com.example.chrisx.oddoneout;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 
 class Icon {
     private int id;
@@ -261,10 +262,8 @@ class Icon {
         if (id == 101) {
             c.drawLine(-w, -w, -w, w, p);
             for (float i = -w; i < w/.75; i += w) c.drawLine(-w, i, w/2, i, p);
-            c.drawLine(w/2, -w, w, -w/2, p);
-            c.drawLine(w, -w/2, w/2, 0, p);
-            c.drawLine(w/2, 0, w, w/2, p);
-            c.drawLine(w, w/2, w/2, w, p);
+            c.drawArc(new RectF(0,-w,w,0), -90, 180, false, p);
+            c.drawArc(new RectF(0,0,w,w), -90, 180, false, p);
         }
         //C
         if (id == 102) {
@@ -276,9 +275,8 @@ class Icon {
         if (id == 103) {
             c.drawLine(-w, -w, -w, w, p);
             c.drawLine(-w, w, 0, w, p);
-            c.drawLine(0, w, w, 0, p);
-            c.drawLine(w, 0, 0, -w, p);
             c.drawLine(0, -w, -w, -w, p);
+            c.drawArc(new RectF(-w,-w,w,w), -90, 180, false, p);
         }
         //E
         if (id == 104) {
