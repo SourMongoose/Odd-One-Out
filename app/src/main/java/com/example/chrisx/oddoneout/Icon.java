@@ -450,6 +450,36 @@ class Icon {
         }
         //Z - use N rotated 90deg
 
+        String[] combos = {"0000", "0001", "0002", "0011", "0012", "0021", "0022", "0101", "0102",
+                "0111", "0112", "0121", "0122", "0202", "0211", "0212", "0221", "0222", "1111",
+                "1112", "1122", "1212", "1222", "2222"};
+        if (id >= 200 && id <= 223) {
+            String s = combos[id - 200];
+
+            Paint fill = new Paint(Paint.ANTI_ALIAS_FLAG);
+            fill.setStyle(Paint.Style.FILL);
+            //UL -> UR -> BR -> BL
+            for (int i = 0; i < 4; i++) {
+                switch(s.charAt(i)) {
+                    case '0':
+                        fill.setColor(inverted ? Color.BLACK : Color.WHITE);
+                        break;
+                    case '1':
+                        fill.setColor(Color.GRAY);
+                        break;
+                    case '2':
+                        fill.setColor(inverted ? Color.WHITE : Color.BLACK);
+                }
+
+                int angle = -180 + i*90;
+                c.drawArc(new RectF(-w,-w,w,w), angle, 90, true, fill);
+            }
+
+            c.drawCircle(0, 0, w, p);
+            c.drawLine(-w, 0, w, 0, p);
+            c.drawLine(0, -w, 0, w, p);
+        }
+
         c.restore();
         rotate(rotateSpeed);
     }

@@ -19,6 +19,7 @@ class Pack {
     String description() {
         switch(name) {
             case "letter": return "The letters of the English alphabet.";
+            case "fourths": return "Circles split into shaded fourths.";
             default: return "Shapes and stuff.";
         }
     }
@@ -42,6 +43,10 @@ class Pack {
             c.drawLine(-w/2, w/2, 0, -w/2, p);
             c.drawLine(0, -w/2, w/2, w/2, p);
             c.drawLine(-w/4, 0, w/4, 0, p);
+        } else if (name.equals("fourths")) {
+            c.drawCircle(0, 0, w/2, p);
+            c.drawLine(-w/2, 0, w/2, 0, p);
+            c.drawLine(0, -w/2, 0, w/2, p);
         } else {
             //default pack
             c.drawCircle(0, 0, w/2, p);
@@ -105,6 +110,32 @@ class Pack {
      * 127 - W
      * 128 - X
      * 129 - Y
+     *
+     * (0 - white; 1 - gray; 2 - black)
+     * 200 - 0000
+     * 201 - 0001
+     * 202 - 0002
+     * 203 - 0011
+     * 204 - 0012
+     * 205 - 0021
+     * 206 - 0022
+     * 207 - 0101
+     * 208 - 0102
+     * 209 - 0111
+     * 210 - 0112
+     * 211 - 0121
+     * 212 - 0122
+     * 213 - 0202
+     * 214 - 0211
+     * 215 - 0212
+     * 216 - 0221
+     * 217 - 0222
+     * 218 - 1111
+     * 219 - 1112
+     * 220 - 1122
+     * 221 - 1212
+     * 222 - 1222
+     * 223 - 2222
      */
 
     int[][][] getEasyPairs() {

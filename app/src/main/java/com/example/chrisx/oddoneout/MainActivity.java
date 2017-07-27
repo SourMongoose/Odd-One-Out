@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     private static final float SHOW_1V1_HEIGHT = 525;
     //shop
     private static final float ICON_PACKS_HEIGHT = 175;
-    private Pack[] packs = {new Pack("default"), new Pack("letter")};
+    private Pack[] packs = {new Pack("default"), new Pack("letter"), new Pack("fourths")};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
