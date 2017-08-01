@@ -94,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
     private Pack[] packs = {new Pack("default"), new Pack("letter"), new Pack("fourths")};
     private static final float THEMES_HEIGHT = 375;
     private Theme[] themes = {new Theme(Color.WHITE, Color.BLACK),
-        new Theme(Color.BLACK, Color.WHITE)};
+        new Theme(Color.BLACK, Color.WHITE),
+        new Theme(Color.rgb(25,149,193), Color.WHITE)};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -564,9 +565,9 @@ public class MainActivity extends AppCompatActivity {
 
                                 //middle bar
                                 int barAlpha = transitionFrames > 2.5*getTargetFPS() ? (int) (255*6 - 255 * transitionFrames / (0.5*getTargetFPS())) : 255;
-                                canvas.drawRect(-5, h()/2-w()/8, w()+5, h()/2+w()/8, newPaint(Color.argb(barAlpha,255,255,255)));
-                                canvas.drawLine(-5, h()/2-w()/8, w()+5, h()/2-w()/8, newPaint(Color.argb(barAlpha,0,0,0)));
-                                canvas.drawLine(-5, h()/2+w()/8, w()+5, h()/2+w()/8, newPaint(Color.argb(barAlpha,0,0,0)));
+                                canvas.drawRect(-5, h()/2-w()/8, w()+5, h()/2+w()/8, newPaint(themes[getThemeID()].convertColor(Color.argb(barAlpha,255,255,255))));
+                                canvas.drawLine(-5, h()/2-w()/8, w()+5, h()/2-w()/8, newPaint(themes[getThemeID()].convertColor(Color.argb(barAlpha,0,0,0))));
+                                canvas.drawLine(-5, h()/2+w()/8, w()+5, h()/2+w()/8, newPaint(themes[getThemeID()].convertColor(Color.argb(barAlpha,0,0,0))));
                                 Paint scoreText = newPaint(Color.argb(barAlpha,0,0,0));
                                 scoreText.setTextAlign(Paint.Align.CENTER);
                                 scoreText.setTextSize(w()/8);
@@ -623,7 +624,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 //fade-in effect (for 1 sec)
                                 int alpha = (int) (255 - 255f * Math.min(gameoverFrames, getTargetFPS()) / getTargetFPS());
-                                canvas.drawRect(-5, -5, w()+5, h()+5, newPaint(Color.argb(alpha,255,255,255)));
+                                canvas.drawRect(-5, -5, w()+5, h()+5, newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,255,255,255))));
 
                                 //display row
                                 for (int i = 0; i < row.length; i++) {
@@ -663,7 +664,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 //fade-in effect (for 1 sec)
                                 int alpha = (int) (255 - 255f * Math.min(gameoverFrames, getTargetFPS()) / getTargetFPS());
-                                canvas.drawRect(-5, -5, w()+5, h()+5, newPaint(Color.argb(alpha,255,255,255)));
+                                canvas.drawRect(-5, -5, w()+5, h()+5, newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,255,255,255))));
 
                                 gameoverFrames++;
                             }
