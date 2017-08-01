@@ -28,11 +28,11 @@ class Pack {
         return 100;
     }
 
-    void drawPack(Canvas c, float x, float y, float w, boolean inverted) {
+    void drawPack(Canvas c, float x, float y, float w, Theme t) {
         float strokeWidth = c.getWidth()/240;
 
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
-        p.setColor(inverted ? Color.WHITE : Color.BLACK);
+        p.setColor(t.getC2());
         p.setStrokeWidth(strokeWidth);
         p.setStyle(Paint.Style.STROKE);
 

@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private String menu = "start";
     private String previousMenu;
 
-    private String pack = "default";
     private String previousPack;
 
     //1P
@@ -89,11 +88,13 @@ public class MainActivity extends AppCompatActivity {
 
     //settings
     private static final float TARGET_FPS_HEIGHT = 175;
-    private static final float INVERT_COLORS_HEIGHT = 350;
-    private static final float SHOW_1V1_HEIGHT = 525;
+    private static final float SHOW_1V1_HEIGHT = 350;
     //shop
     private static final float ICON_PACKS_HEIGHT = 175;
     private Pack[] packs = {new Pack("default"), new Pack("letter"), new Pack("fourths")};
+    private static final float THEMES_HEIGHT = 375;
+    private Theme[] themes = {new Theme(Color.WHITE, Color.BLACK),
+        new Theme(Color.BLACK, Color.WHITE)};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,12 +139,11 @@ public class MainActivity extends AppCompatActivity {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            //white background
-                            if (getInvertColors().equals("on")) canvas.drawColor(Color.BLACK);
-                            else canvas.drawColor(Color.WHITE);
+                            //background
+                            canvas.drawColor(themes[getThemeID()].getC1());
 
                             if (menu.equals("start")) {
-                                Paint title = newPaint(Color.BLACK);
+                                Paint title = newPaint(themes[getThemeID()].getC2());
                                 title.setTextAlign(Paint.Align.CENTER);
                                 title.setTextSize(convert854(150));
                                 canvas.drawText("ODD", w()/2+Math.max(startAnimation-getTargetFPS()*6/3,0)/(getTargetFPS()*2/3f)*w(), convert854(225), title);
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                                 //shop
                                 drawCart(40, 40, 20);
 
-                                Paint cover = newPaint(Color.WHITE);
+                                Paint cover = newPaint(themes[getThemeID()].getC1());
                                 cover.setAlpha((int)(255*Math.min(1, startAnimation/(getTargetFPS()*2/3f))));
                                 canvas.drawRect(0, 0, w(), 80, cover);
 
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                             } else if (menu.equals("howtoplay")) {
                                 float textSize = convert854(40);
 
-                                Paint p = newPaint(Color.BLACK);
+                                Paint p = newPaint(themes[getThemeID()].getC2());
                                 p.setTextAlign(Paint.Align.CENTER);
                                 p.setTextSize(textSize);
 
@@ -224,17 +224,17 @@ public class MainActivity extends AppCompatActivity {
                                 if (tutorialFrames < 3) canvas.drawText("Next", w()/2, h()-20, p);
                                 else canvas.drawText("Menu", w()/2, h()-20, p);
                             } else if (menu.equals("settings")) {
-                                Paint titleText = newPaint(Color.BLACK);
+                                Paint titleText = newPaint(themes[getThemeID()].getC2());
                                 titleText.setTextAlign(Paint.Align.CENTER);
                                 titleText.setTextSize(convert854(50));
                                 canvas.drawText("settings", w()/2, convert854(75), titleText);
 
-                                Paint categoryText = newPaint(Color.BLACK);
+                                Paint categoryText = newPaint(themes[getThemeID()].getC2());
                                 categoryText.setTextSize(convert854(40));
-                                Paint choiceText = newPaint(Color.BLACK);
+                                Paint choiceText = newPaint(themes[getThemeID()].getC2());
                                 choiceText.setTextAlign(Paint.Align.CENTER);
                                 choiceText.setTextSize(convert854(35));
-                                Paint boxPaint = newPaint(Color.BLACK);
+                                Paint boxPaint = newPaint(themes[getThemeID()].getC2());
                                 boxPaint.setStyle(Paint.Style.STROKE);
                                 boxPaint.setStrokeWidth(convert854(2));
 
@@ -247,13 +247,6 @@ public class MainActivity extends AppCompatActivity {
                                 else if (getTargetFPS() == 45) canvas.drawRect(w()/4+convert854(20), convert854(TARGET_FPS_HEIGHT+30), w()*2/4-convert854(20), convert854(TARGET_FPS_HEIGHT+90), boxPaint);
                                 else if (getTargetFPS() == 60) canvas.drawRect(w()*2/4+convert854(20), convert854(TARGET_FPS_HEIGHT+30), w()*3/4-convert854(20), convert854(TARGET_FPS_HEIGHT+90), boxPaint);
 
-                                //equivalent of day/night mode
-                                canvas.drawText("invert colors:", convert854(20), convert854(INVERT_COLORS_HEIGHT), categoryText);
-                                canvas.drawText("on", w()/8, convert854(INVERT_COLORS_HEIGHT+75), choiceText);
-                                canvas.drawText("off", w()*3/8, convert854(INVERT_COLORS_HEIGHT+75), choiceText);
-                                if (getInvertColors().equals("on")) canvas.drawRect(convert854(20), convert854(INVERT_COLORS_HEIGHT+30), w()/4-convert854(20), convert854(INVERT_COLORS_HEIGHT+90), boxPaint);
-                                else if (getInvertColors().equals("off")) canvas.drawRect(w()/4+convert854(20), convert854(INVERT_COLORS_HEIGHT+30), w()*2/4-convert854(20), convert854(INVERT_COLORS_HEIGHT+90), boxPaint);
-
                                 //show 1v1 mode as an option
                                 canvas.drawText("enable 2P mode:", convert854(20), convert854(SHOW_1V1_HEIGHT), categoryText);
                                 canvas.drawText("on", w()/8, convert854(SHOW_1V1_HEIGHT+75), choiceText);
@@ -263,20 +256,20 @@ public class MainActivity extends AppCompatActivity {
 
                                 //back button
                                 Icon backButton = new Icon(9, 270);
-                                backButton.drawShape(canvas, 60, h()-40, 60, getInvertColors().equals("on"));
+                                backButton.drawShape(canvas, 60, h()-40, 60, themes[getThemeID()]);
                             } else if (menu.equals("shop")) {
-                                Paint titleText = newPaint(Color.BLACK);
+                                Paint titleText = newPaint(themes[getThemeID()].getC2());
                                 titleText.setTextAlign(Paint.Align.CENTER);
                                 titleText.setTextSize(convert854(50));
                                 canvas.drawText("shop", w()/2, convert854(75), titleText);
 
-                                Paint categoryText = newPaint(Color.BLACK);
+                                Paint categoryText = newPaint(themes[getThemeID()].getC2());
                                 categoryText.setTextSize(convert854(40));
-                                Paint border = newPaint(Color.BLACK);
+                                Paint border = newPaint(themes[getThemeID()].getC2());
                                 border.setStyle(Paint.Style.STROKE);
                                 border.setStrokeWidth(convert854(2));
-                                Paint locked = newPaint(getInvertColors().equals("off") ? Color.argb(200,255,255,255) : Color.argb(150,255,255,255));
-                                Paint costText = newPaint(Color.BLACK);
+                                Paint locked = newPaint(themes[getThemeID()].convertColor(Color.argb(175,255,255,255)));
+                                Paint costText = newPaint(themes[getThemeID()].getC2());
                                 costText.setTextAlign(Paint.Align.CENTER);
 
                                 //packs
@@ -286,8 +279,8 @@ public class MainActivity extends AppCompatActivity {
                                 for (int i = 0; i < packs.length; i++) {
                                     float lx = convert854(20) + i * (boxWidth + convert854(20));
                                     float ly = ICON_PACKS_HEIGHT + convert854(30);
-                                    if (pack.equals(packs[i].getName())) canvas.drawRect(lx, ly, lx+boxWidth, ly+boxWidth, border);
-                                    packs[i].drawPack(canvas, lx+boxWidth/2, ly+boxWidth/2, boxWidth-convert854(40), getInvertColors().equals("on"));
+                                    if (getPack().equals(packs[i].getName())) canvas.drawRect(lx, ly, lx+boxWidth, ly+boxWidth, border);
+                                    packs[i].drawPack(canvas, lx+boxWidth/2, ly+boxWidth/2, boxWidth-convert854(40), themes[getThemeID()]);
 
                                     //check if unlocked
                                     if (!ownsPack(packs[i].getName())) {
@@ -297,18 +290,34 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
 
+                                //themes
+                                canvas.drawText("color themes:", convert854(20), convert854(THEMES_HEIGHT), categoryText);
+                                for (int i = 0; i < themes.length; i++) {
+                                    float lx = convert854(20) + i * (boxWidth + convert854(20));
+                                    float ly = THEMES_HEIGHT + convert854(30);
+                                    if (getThemeID() == i) canvas.drawRect(lx, ly, lx+boxWidth, ly+boxWidth, border);
+                                    themes[i].drawTheme(canvas, lx+boxWidth/2, ly+boxWidth/2, boxWidth-convert854(40));
+
+                                    //check if unlocked
+                                    if (!ownsTheme(i)) {
+                                        canvas.drawRect(lx, ly, lx+boxWidth, ly+boxWidth, locked);
+                                        canvas.drawText(themes[i].cost()+"", lx+boxWidth/2, ly+boxWidth*9/16, costText);
+                                        drawStar(lx+boxWidth/2, ly+boxWidth*3/4, boxWidth/8);
+                                    }
+                                }
+
                                 //back button
                                 Icon backButton = new Icon(9, 270);
-                                backButton.drawShape(canvas, 60, h()-40, 60, getInvertColors().equals("on"));
+                                backButton.drawShape(canvas, 60, h()-40, 60, themes[getThemeID()]);
 
                                 //show number of stars
                                 drawStar(w()-40, h()-40, 20);
-                                Paint starCount = newPaint(Color.BLACK);
+                                Paint starCount = newPaint(themes[getThemeID()].getC2());
                                 starCount.setTextAlign(Paint.Align.RIGHT);
                                 starCount.setTextSize(convert854(40));
                                 canvas.drawText(getStars()+"", w()-70, h()-40-(starCount.ascent()+starCount.descent())/2, starCount);
                             } else if (menu.equals("mode")){
-                                Paint modeText = newPaint(Color.BLACK);
+                                Paint modeText = newPaint(themes[getThemeID()].getC2());
                                 modeText.setTextAlign(Paint.Align.CENTER);
                                 modeText.setTextSize(h()/4);
 
@@ -326,22 +335,22 @@ public class MainActivity extends AppCompatActivity {
                                 if (!paused) {
                                     //show current column
                                     canvas.drawRect(column * w()/4, 0, (column + 1) * w()/4, h(),
-                                            newPaint(getInvertColors().equals("off") ? Color.rgb(245,245,245) : Color.rgb(220,220,220)));
+                                            newPaint(themes[getThemeID()].convertColor(Color.rgb(230,230,230))));
                                     //dividing lines
                                     for (int i = 0; i < 3; i++) {
                                         float x = w()/4 + i * w()/4;
                                         canvas.drawLine(x, 0, x, h(),
-                                                newPaint(getInvertColors().equals("off") ? Color.rgb(200,200,200) : Color.rgb(150,150,150)));
+                                                newPaint(themes[getThemeID()].convertColor(Color.rgb(175,175,175))));
                                     }
 
                                     //show current score and high score
-                                    Paint scoreTitle = newPaint(Color.BLACK);
+                                    Paint scoreTitle = newPaint(themes[getThemeID()].getC2());
                                     scoreTitle.setTextSize(convert854(20));
                                     scoreTitle.setTextAlign(Paint.Align.LEFT);
                                     canvas.drawText("score", 10, convert854(25), scoreTitle);
                                     scoreTitle.setTextAlign(Paint.Align.RIGHT);
                                     canvas.drawText("high", w() - 10, convert854(25), scoreTitle);
-                                    Paint scoreText = newPaint(Color.BLACK);
+                                    Paint scoreText = newPaint(themes[getThemeID()].getC2());
                                     scoreText.setTextSize(convert854(30));
                                     scoreText.setTextAlign(Paint.Align.LEFT);
                                     canvas.drawText(score+"", 10, convert854(60), scoreText);
@@ -350,7 +359,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     //display row
                                     for (int i = 0; i < row.length; i++) {
-                                        row[i].drawShape(canvas, w()/8 + w()/4 * i, rowPosition + w()/8, w()/4 / (float) Math.sqrt(2) - 10, getInvertColors().equals("on"));
+                                        row[i].drawShape(canvas, w()/8 + w()/4 * i, rowPosition + w()/8, w()/4 / (float) Math.sqrt(2) - 10, themes[getThemeID()]);
                                     }
 
                                     //draw stars
@@ -371,7 +380,7 @@ public class MainActivity extends AppCompatActivity {
                                             float x = (float) starCollectAnimation / (getTargetFPS()/8);
                                             float explosionWidth = (1 - x*x) * (w()/16);
                                             for (float angle = 0; angle < 1.9*Math.PI; angle += (2*Math.PI)/12) {
-                                                canvas.drawCircle(w()/8 + starCollectColumn * w()/4 + explosionWidth*(float)Math.cos(angle), h() - w()/8 - explosionWidth*(float)Math.sin(angle), convert854(2), newPaint(Color.BLACK));
+                                                canvas.drawCircle(w()/8 + starCollectColumn * w()/4 + explosionWidth*(float)Math.cos(angle), h() - w()/8 - explosionWidth*(float)Math.sin(angle), convert854(2), newPaint(themes[getThemeID()].getC2()));
                                             }
                                         }
 
@@ -406,11 +415,11 @@ public class MainActivity extends AppCompatActivity {
                                         } else {
                                             menu = "transition";
                                             transitionFrames = 0;
-                                            previousPack = pack;
+                                            previousPack = getPack();
                                             if (score > getHighScore()) {
                                                 isHighScore = true;
                                                 previousHigh = getHighScore();
-                                                editor.putInt(pack+"_high_score", (int) score);
+                                                editor.putInt(getPack()+"_high_score", (int) score);
                                                 editor.apply();
                                             } else isHighScore = false;
                                         }
@@ -421,23 +430,23 @@ public class MainActivity extends AppCompatActivity {
                                     if (p1_ready && p2_ready) {
                                         //show current columns
                                         canvas.drawRect(p1_column * w()/4, h()/2, (p1_column + 1) * w()/4, h(),
-                                                newPaint(getInvertColors().equals("off") ? Color.rgb(245,245,245) : Color.rgb(220,220,220)));
+                                                newPaint(themes[getThemeID()].convertColor(Color.rgb(230,230,230))));
                                         canvas.drawRect((3-p2_column) * w()/4, 0, (3-p2_column + 1) * w()/4, h()/2,
-                                                newPaint(getInvertColors().equals("off") ? Color.rgb(245,245,245) : Color.rgb(220,220,220)));
+                                                newPaint(themes[getThemeID()].convertColor(Color.rgb(230,230,230))));
                                         //dividing lines
                                         for (int i = 0; i < 3; i++) {
                                             float x = w()/4 + i * w()/4;
                                             canvas.drawLine(x, 0, x, h(),
-                                                    newPaint(getInvertColors().equals("off") ? Color.rgb(200,200,200) : Color.rgb(150,150,150)));
+                                                    newPaint(themes[getThemeID()].convertColor(Color.rgb(175,175,175))));
                                         }
 
                                         //display rows
                                         for (int i = 0; i < p1_row.length; i++) {
-                                            p1_row[i].drawShape(canvas, w()/8 + w()/4 * i, rowPosition + w()/8, w()/4 / (float) Math.sqrt(2) - 10, getInvertColors().equals("on"));
+                                            p1_row[i].drawShape(canvas, w()/8 + w()/4 * i, rowPosition + w()/8, w()/4 / (float) Math.sqrt(2) - 10, themes[getThemeID()]);
                                         }
                                         flipScreen();
                                         for (int i = 0; i < p2_row.length; i++) {
-                                            p2_row[i].drawShape(canvas, w() / 8 + w() / 4 * i, rowPosition + w() / 8, w() / 4 / (float) Math.sqrt(2) - 10, getInvertColors().equals("on"));
+                                            p2_row[i].drawShape(canvas, w() / 8 + w() / 4 * i, rowPosition + w() / 8, w() / 4 / (float) Math.sqrt(2) - 10, themes[getThemeID()]);
                                         }
                                         canvas.restore();
 
@@ -461,10 +470,10 @@ public class MainActivity extends AppCompatActivity {
                                         }
 
                                         //middle bar
-                                        canvas.drawRect(-5, h()/2-w()/8, w()+5, h()/2+w()/8, newPaint(Color.WHITE));
-                                        canvas.drawLine(-5, h()/2-w()/8, w()+5, h()/2-w()/8, newPaint(Color.BLACK));
-                                        canvas.drawLine(-5, h()/2+w()/8, w()+5, h()/2+w()/8, newPaint(Color.BLACK));
-                                        Paint scoreText = newPaint(Color.BLACK);
+                                        canvas.drawRect(-5, h()/2-w()/8, w()+5, h()/2+w()/8, newPaint(themes[getThemeID()].getC1()));
+                                        canvas.drawLine(-5, h()/2-w()/8, w()+5, h()/2-w()/8, newPaint(themes[getThemeID()].getC2()));
+                                        canvas.drawLine(-5, h()/2+w()/8, w()+5, h()/2+w()/8, newPaint(themes[getThemeID()].getC2()));
+                                        Paint scoreText = newPaint(themes[getThemeID()].getC2());
                                         scoreText.setTextAlign(Paint.Align.CENTER);
                                         scoreText.setTextSize(w()/8);
                                         canvas.drawText(score+"", w()/8, h()/2-(scoreText.ascent()+scoreText.descent())/2, scoreText);
@@ -472,7 +481,7 @@ public class MainActivity extends AppCompatActivity {
                                         canvas.drawText(score+"", w()/8, h()/2-(scoreText.ascent()+scoreText.descent())/2, scoreText);
                                         canvas.restore();
                                     } else {
-                                        Paint readyText = newPaint(Color.BLACK);
+                                        Paint readyText = newPaint(themes[getThemeID()].getC2());
                                         readyText.setTextAlign(Paint.Align.CENTER);
                                         readyText.setTextSize(convert854(30));
 
@@ -483,7 +492,7 @@ public class MainActivity extends AppCompatActivity {
                                             canvas.drawText("P1, tap here", w()/2, h()*3/4, readyText);
                                             canvas.drawText("when ready", w()/2, h()*3/4+convert854(30), readyText);
                                         }
-                                        cancel.drawShape(canvas, 40, h()-40, 30, getInvertColors().equals("on"));
+                                        cancel.drawShape(canvas, 40, h()-40, 30, themes[getThemeID()]);
 
                                         flipScreen();
                                         if (p2_ready) canvas.drawText("Ready!", w()/2, h()*3/4, readyText);
@@ -491,7 +500,7 @@ public class MainActivity extends AppCompatActivity {
                                             canvas.drawText("P2, tap here", w()/2, h()*3/4, readyText);
                                             canvas.drawText("when ready", w()/2, h()*3/4+convert854(30), readyText);
                                         }
-                                        cancel.drawShape(canvas, 40, h()-40, 30, getInvertColors().equals("on"));
+                                        cancel.drawShape(canvas, 40, h()-40, 30, themes[getThemeID()]);
                                         canvas.restore();
                                     }
                                 }
@@ -500,20 +509,20 @@ public class MainActivity extends AppCompatActivity {
 
                                 //show current column
                                 canvas.drawRect(column * w()/4, 0, (column + 1) * w()/4, h(),
-                                        newPaint(getInvertColors().equals("off") ? Color.argb(alpha,245,245,245) : Color.argb(alpha,200,200,200)));//dividing lines
+                                        newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,230,230,230))));
                                 //dividing lines
                                 for (int i = 0; i < 3; i++) {
                                     float x = w()/4 + i * w()/4;
                                     canvas.drawLine(x, 0, x, h(),
-                                            newPaint(getInvertColors().equals("off") ? Color.argb(alpha,200,200,200) : Color.argb(alpha,150,150,150)));
+                                            newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,175,175,175))));
                                 }
 
                                 //display row
                                 for (int i = 0; i < row.length; i++) {
-                                    row[i].drawShape(canvas, w()/8+w()/4*i, rowPosition+w()/8, w()/4/(float)Math.sqrt(2)-10, getInvertColors().equals("on"));
+                                    row[i].drawShape(canvas, w()/8+w()/4*i, rowPosition+w()/8, w()/4/(float)Math.sqrt(2)-10, themes[getThemeID()]);
                                 }
                                 //box the correct column
-                                Paint box = newPaint(Color.BLACK);
+                                Paint box = newPaint(themes[getThemeID()].getC2());
                                 box.setStyle(Paint.Style.STROKE);
                                 box.setStrokeWidth(w()/150);
                                 box.setAlpha(255-alpha);
@@ -537,14 +546,14 @@ public class MainActivity extends AppCompatActivity {
 
                                     //show current columns
                                     canvas.drawRect(p1_column * w()/4, h()/2, (p1_column + 1) * w()/4, h(),
-                                            newPaint(getInvertColors().equals("off") ? Color.argb(alpha,245,245,245) : Color.argb(alpha,220,220,220)));
+                                            newPaint(themes[getThemeID()].convertColor(Color.rgb(230,230,230))));
                                     canvas.drawRect((3-p2_column) * w()/4, 0, (3-p2_column + 1) * w()/4, h()/2,
-                                            newPaint(getInvertColors().equals("off") ? Color.argb(alpha,245,245,245) : Color.argb(alpha,220,220,220)));
+                                            newPaint(themes[getThemeID()].convertColor(Color.rgb(230,230,230))));
                                     //dividing lines
                                     for (int i = 0; i < 3; i++) {
                                         float x = w()/4 + i * w()/4;
                                         canvas.drawLine(x, 0, x, h(),
-                                                newPaint(getInvertColors().equals("off") ? Color.argb(alpha,200,200,200) : Color.argb(alpha,150,150,150)));
+                                                newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,150,150,150))));
                                     }
                                 }
 
@@ -574,19 +583,19 @@ public class MainActivity extends AppCompatActivity {
                                     p1_ready = p2_ready = false;
                                 }
                             } else if (menu.equals("gameover")) {
-                                Paint p = newPaint(Color.BLACK);
+                                Paint p = newPaint(themes[getThemeID()].getC2());
                                 p.setTextAlign(Paint.Align.CENTER);
                                 p.setTextSize(30);
 
                                 //new high score?
                                 if (isHighScore) {
-                                    Paint bannerText = newPaint(Color.BLACK);
+                                    Paint bannerText = newPaint(themes[getThemeID()].getC2());
                                     bannerText.setTextAlign(Paint.Align.CENTER);
                                     bannerText.setTextSize(50);
                                     canvas.drawText("NEW HIGH", w()/2, h()/4-25, bannerText);
                                     canvas.drawText("SCORE!", w()/2, h()/4+25, bannerText);
 
-                                    Paint border = newPaint(Color.BLACK);
+                                    Paint border = newPaint(themes[getThemeID()].getC2());
                                     for (int i = -100; i < w()+100; i += 50) {
                                         canvas.drawCircle(i-((float)gameoverFrames/getTargetFPS()*100%50), h()/4-80, 5, border);
                                         canvas.drawCircle(i+((float)gameoverFrames/getTargetFPS()*100%50), h()/4+45, 5, border);
@@ -618,17 +627,17 @@ public class MainActivity extends AppCompatActivity {
 
                                 //display row
                                 for (int i = 0; i < row.length; i++) {
-                                    row[i].drawShape(canvas, w()/8+w()/4*i, rowPosition+w()/8, w()/4/(float)Math.sqrt(2)-10, getInvertColors().equals("on"));
+                                    row[i].drawShape(canvas, w()/8+w()/4*i, rowPosition+w()/8, w()/4/(float)Math.sqrt(2)-10, themes[getThemeID()]);
                                 }
                                 //box the correct column
-                                Paint box = newPaint(Color.BLACK);
+                                Paint box = newPaint(themes[getThemeID()].getC2());
                                 box.setStyle(Paint.Style.STROKE);
                                 box.setStrokeWidth(3);
                                 canvas.drawRect(correctColumn*w()/4, h()-w()/4, (correctColumn+1)*w()/4, h(), box);
 
                                 gameoverFrames++;
                             } else if (menu.equals("2P_gameover")) {
-                                Paint p = newPaint(Color.BLACK);
+                                Paint p = newPaint(themes[getThemeID()].getC2());
                                 p.setTextAlign(Paint.Align.CENTER);
                                 p.setTextSize(70);
 
@@ -753,10 +762,6 @@ public class MainActivity extends AppCompatActivity {
 
                     nanosecondsPerFrame = (long)1e9 / getTargetFPS();
                     millisecondsPerFrame = (long)1e3 / getTargetFPS();
-                } else if (Y > convert854(INVERT_COLORS_HEIGHT+30) && Y < convert854(INVERT_COLORS_HEIGHT+90)) {
-                    if (X < w()/4) editor.putString("invert_colors", "on");
-                    else if (X < w()*2/4) editor.putString("invert_colors", "off");
-                    editor.apply();
                 } else if (Y > convert854(SHOW_1V1_HEIGHT+30) && Y < convert854(SHOW_1V1_HEIGHT+90)) {
                     if (X < w()/4) editor.putString("show_1v1", "on");
                     else if (X < w()*2/4) editor.putString("show_1v1", "off");
@@ -781,7 +786,25 @@ public class MainActivity extends AppCompatActivity {
                                     editor.apply();
                                 }
                             } else {
-                                pack = packs[i].getName();
+                                editor.putString("pack", packs[i].getName());
+                                editor.apply();
+                            }
+                        }
+                    }
+                    for (int i = 0; i < themes.length; i++) {
+                        float lx = convert854(20) + i * (boxWidth + convert854(20));
+                        float ly = THEMES_HEIGHT + convert854(30);
+
+                        if (X > lx && X < lx+boxWidth && Y > ly && Y < ly+boxWidth) {
+                            if (!ownsTheme(i)) {
+                                if (getStars() >= themes[i].cost()) {
+                                    editor.putBoolean("owns_theme_"+i, true);
+                                    editor.putInt("stars", getStars()-themes[i].cost());
+                                    editor.apply();
+                                }
+                            } else {
+                                editor.putInt("theme", i);
+                                editor.apply();
                             }
                         }
                     }
@@ -871,13 +894,6 @@ public class MainActivity extends AppCompatActivity {
         p.setColor(color);
         p.setTypeface(spinnaker);
 
-        if (getInvertColors().equals("on")) {
-            p.setARGB(p.getAlpha(),
-                    255 - ((p.getColor() >> 16) & 0xff),
-                    255 - ((p.getColor() >> 8) & 0xff),
-                    255 - (p.getColor() & 0xff));
-        }
-
         return p;
     }
 
@@ -892,7 +908,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int getHighScore() {
-        return sharedPref.getInt(pack+"_high_score", 0);
+        return sharedPref.getInt(getPack()+"_high_score", 0);
     }
 
     private int getHighScore(String p) {
@@ -906,26 +922,33 @@ public class MainActivity extends AppCompatActivity {
     private int getTargetFPS() {
         return sharedPref.getInt("target_fps", 60);
     }
-    
-    private String getInvertColors() {
-        return sharedPref.getString("invert_colors", "off");
-    }
 
     private String getShow1v1() {
         return sharedPref.getString("show_1v1", "off");
     }
 
+    private String getPack() {
+        return sharedPref.getString("pack", "default");
+    }
+
+    private int getThemeID() {
+        return sharedPref.getInt("theme", 0);
+    }
+
     private boolean ownsPack(String p) {
-        if (p.equals("default")) return true;
-        return sharedPref.getBoolean("owns_"+p, false);
+        return p.equals("default") || sharedPref.getBoolean("owns_"+p, false);
+    }
+
+    private boolean ownsTheme(int id) {
+        return id == 0 || sharedPref.getBoolean("owns_theme_"+id, false);
     }
 
     private void draw2PScores() {
-        Paint scoreText = newPaint(Color.BLACK);
+        Paint scoreText = newPaint(themes[getThemeID()].getC2());
         scoreText.setTextAlign(Paint.Align.CENTER);
         scoreText.setTextSize(h()/8);
         float scoreHeight = h()*3/4 - (scoreText.ascent() + scoreText.descent()) / 2;
-        Paint playerText = newPaint(Color.BLACK);
+        Paint playerText = newPaint(themes[getThemeID()].getC2());
         playerText.setTextAlign(Paint.Align.CENTER);
         playerText.setTextSize(h()/20);
         float playerHeight = h()*7/8 - (playerText.ascent() + playerText.descent()) / 2;
@@ -969,7 +992,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void drawGear(float x, float y, float w) {
-        Paint p = newPaint(Color.BLACK);
+        Paint p = newPaint(themes[getThemeID()].getC2());
         p.setStrokeWidth(convert854(2));
         p.setStyle(Paint.Style.STROKE);
 
@@ -987,7 +1010,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void drawStar(float x, float y, float w) {
-        Paint p = newPaint(Color.BLACK);
+        Paint p = newPaint(themes[getThemeID()].getC2());
         p.setStrokeWidth(convert854(2));
 
         for (float angle = (float)Math.PI/2; angle < 9*Math.PI/4; angle += 2*Math.PI/5) {
@@ -999,7 +1022,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void drawCart(float x, float y, float w) {
-        Paint p = newPaint(Color.BLACK);
+        Paint p = newPaint(themes[getThemeID()].getC2());
         p.setStrokeWidth(convert854(2));
         p.setStyle(Paint.Style.STROKE);
 
@@ -1026,7 +1049,7 @@ public class MainActivity extends AppCompatActivity {
             rowPosition = h()/2 - w()/8;
         }
 
-        Pack activePack = new Pack(pack);
+        Pack activePack = new Pack(getPack());
         int[][][] easyPairs = activePack.getEasyPairs(),
                 mediumPairs = activePack.getMediumPairs(),
                 hardPairs = activePack.getHardPairs(),
@@ -1059,7 +1082,7 @@ public class MainActivity extends AppCompatActivity {
             else updateMirror(output, hardMirror);
         }
 
-        if (pack.equals("fourths")) {
+        if (getPack().equals("fourths")) {
             int angle = ((int)(Math.random()*4)) * 90;
             for (Icon i : output) i.rotate(angle);
         }
