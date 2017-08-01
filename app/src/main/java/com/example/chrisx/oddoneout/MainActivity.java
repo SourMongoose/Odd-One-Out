@@ -1059,6 +1059,11 @@ public class MainActivity extends AppCompatActivity {
             else updateMirror(output, hardMirror);
         }
 
+        if (pack.equals("fourths")) {
+            int angle = ((int)(Math.random()*4)) * 90;
+            for (Icon i : output) i.rotate(angle);
+        }
+
         return output;
     }
 
