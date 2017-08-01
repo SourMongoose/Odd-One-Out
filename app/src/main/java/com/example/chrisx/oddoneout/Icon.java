@@ -465,7 +465,7 @@ class Icon {
                         fill.setColor(inverted ? Color.BLACK : Color.WHITE);
                         break;
                     case '1':
-                        fill.setColor(Color.GRAY);
+                        fill.setColor(Color.rgb(128, 128, 128));
                         break;
                     case '2':
                         fill.setColor(inverted ? Color.WHITE : Color.BLACK);
