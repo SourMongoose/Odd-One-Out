@@ -486,7 +486,7 @@ public class MainActivity extends AppCompatActivity {
                                         readyText.setTextAlign(Paint.Align.CENTER);
                                         readyText.setTextSize(convert854(30));
 
-                                        Icon cancel = new Icon(23);
+                                        Icon cancel = new Icon(8);
 
                                         if (p1_ready) canvas.drawText("Ready!", w()/2, h()*3/4, readyText);
                                         else {
@@ -547,9 +547,9 @@ public class MainActivity extends AppCompatActivity {
 
                                     //show current columns
                                     canvas.drawRect(p1_column * w()/4, h()/2, (p1_column + 1) * w()/4, h(),
-                                            newPaint(themes[getThemeID()].convertColor(Color.rgb(230,230,230))));
+                                            newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,230,230,230))));
                                     canvas.drawRect((3-p2_column) * w()/4, 0, (3-p2_column + 1) * w()/4, h()/2,
-                                            newPaint(themes[getThemeID()].convertColor(Color.rgb(230,230,230))));
+                                            newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,230,230,230))));
                                     //dividing lines
                                     for (int i = 0; i < 3; i++) {
                                         float x = w()/4 + i * w()/4;
@@ -568,7 +568,7 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawRect(-5, h()/2-w()/8, w()+5, h()/2+w()/8, newPaint(themes[getThemeID()].convertColor(Color.argb(barAlpha,255,255,255))));
                                 canvas.drawLine(-5, h()/2-w()/8, w()+5, h()/2-w()/8, newPaint(themes[getThemeID()].convertColor(Color.argb(barAlpha,0,0,0))));
                                 canvas.drawLine(-5, h()/2+w()/8, w()+5, h()/2+w()/8, newPaint(themes[getThemeID()].convertColor(Color.argb(barAlpha,0,0,0))));
-                                Paint scoreText = newPaint(Color.argb(barAlpha,0,0,0));
+                                Paint scoreText = newPaint(themes[getThemeID()].convertColor(Color.argb(barAlpha,0,0,0)));
                                 scoreText.setTextAlign(Paint.Align.CENTER);
                                 scoreText.setTextSize(w()/8);
                                 canvas.drawText(score+"", w()/8, h()/2-(scoreText.ascent()+scoreText.descent())/2, scoreText);

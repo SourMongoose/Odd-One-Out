@@ -53,7 +53,7 @@ class Icon {
         p.setStyle(Paint.Style.STROKE);
 
         Paint p2 = new Paint(Paint.ANTI_ALIAS_FLAG);
-        p.setColor(t.getC2());
+        p2.setColor(t.getC2());
 
         c.save();
         c.translate(x, y);
