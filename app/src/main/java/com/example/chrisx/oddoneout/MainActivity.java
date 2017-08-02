@@ -94,8 +94,17 @@ public class MainActivity extends AppCompatActivity {
     private Pack[] packs = {new Pack("default"), new Pack("letter"), new Pack("fourths")};
     private static final float THEMES_HEIGHT = 375;
     private Theme[] themes = {new Theme(Color.WHITE, Color.BLACK),
-        new Theme(Color.BLACK, Color.WHITE),
-        new Theme(Color.rgb(25,149,193), Color.WHITE)};
+            new Theme(Color.BLACK, Color.WHITE),
+            new Theme(Color.rgb(25,149,193), Color.WHITE),
+            new Theme(Color.rgb(38,92,0), Color.WHITE),
+            new Theme(Color.rgb(82,54,52), Color.WHITE),
+            new Theme(Color.rgb(216,65,47), Color.WHITE)
+    };
+
+    //screen touches
+    private float downX, downY;
+    private float moveX, moveY;
+    private boolean scrolled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -294,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
                                 //themes
                                 canvas.drawText("color themes:", convert854(20), convert854(THEMES_HEIGHT), categoryText);
                                 for (int i = 0; i < themes.length; i++) {
-                                    float lx = convert854(20) + i * (boxWidth + convert854(20));
+                                    float lx = convert854(20) + i * (boxWidth + convert854(20)) - getThemeScroll();
                                     float ly = THEMES_HEIGHT + convert854(30);
                                     if (getThemeID() == i) canvas.drawRect(lx, ly, lx+boxWidth, ly+boxWidth, border);
                                     themes[i].drawTheme(canvas, lx+boxWidth/2, ly+boxWidth/2, boxWidth-convert854(40));
@@ -306,6 +315,14 @@ public class MainActivity extends AppCompatActivity {
                                         drawStar(lx+boxWidth/2, ly+boxWidth*3/4, boxWidth/8);
                                     }
                                 }
+                                //scroll bar
+                                float shownWidth = w() - convert854(40),
+                                        totalWidth = themes.length * (boxWidth + convert854(20)) - convert854(20);
+                                canvas.drawRect(convert854(20) + getThemeScroll() / totalWidth * shownWidth,
+                                        THEMES_HEIGHT + boxWidth + convert854(50),
+                                        convert854(20) + (getThemeScroll()+shownWidth) / totalWidth * shownWidth,
+                                        THEMES_HEIGHT + boxWidth + convert854(60),
+                                        newPaint(themes[getThemeID()].convertColor(Color.rgb(128,128,128))));
 
                                 //back button
                                 Icon backButton = new Icon(9, 270);
@@ -770,42 +787,70 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         } else if (menu.equals("shop")) {
-            if (action == MotionEvent.ACTION_UP) {
+            if (action == MotionEvent.ACTION_DOWN) {
+                downX = moveX = X;
+                downY = moveY = Y;
+                scrolled = false;
+            } else if (action == MotionEvent.ACTION_MOVE) {
+                float boxWidth = (w() - 5 * convert854(20)) / 4;
+                float ly = THEMES_HEIGHT + convert854(30);
+
+                if (downY > ly && downY < ly+boxWidth) {
+                    float shownWidth = w() - convert854(40),
+                            totalWidth = themes.length * (boxWidth + convert854(20)) - convert854(20);
+                    float dx = moveX - X;
+
+                    if (getThemeScroll() + dx < 0) {
+                        editor.putFloat("theme_scroll", 0);
+                    } else if (getThemeScroll() + dx > totalWidth - shownWidth) {
+                        editor.putFloat("theme_scroll", totalWidth - shownWidth);
+                    } else {
+                        editor.putFloat("theme_scroll", getThemeScroll() + dx);
+                    }
+                    editor.apply();
+                }
+
+                moveX = X;
+                moveY = Y;
+                if (Math.abs(X - downX) + Math.abs(Y - downY) > convert854(40)) scrolled = true;
+            } else if (action == MotionEvent.ACTION_UP) {
                 if (X < 120 && Y > h() - 80) {
                     menu = previousMenu;
                 } else {
-                    float boxWidth = (w() - 5 * convert854(20)) / 4;
-                    for (int i = 0; i < packs.length; i++) {
-                        float lx = convert854(20) + i * (boxWidth + convert854(20));
-                        float ly = ICON_PACKS_HEIGHT + convert854(30);
+                    if (!scrolled) {
+                        float boxWidth = (w() - 5 * convert854(20)) / 4;
+                        for (int i = 0; i < packs.length; i++) {
+                            float lx = convert854(20) + i * (boxWidth + convert854(20));
+                            float ly = ICON_PACKS_HEIGHT + convert854(30);
 
-                        if (X > lx && X < lx+boxWidth && Y > ly && Y < ly+boxWidth) {
-                            if (!ownsPack(packs[i].getName())) {
-                                if (getStars() >= packs[i].cost()) {
-                                    editor.putBoolean("owns_"+packs[i].getName(), true);
-                                    editor.putInt("stars", getStars()-packs[i].cost());
+                            if (X > lx && X < lx + boxWidth && Y > ly && Y < ly + boxWidth) {
+                                if (!ownsPack(packs[i].getName())) {
+                                    if (getStars() >= packs[i].cost()) {
+                                        editor.putBoolean("owns_" + packs[i].getName(), true);
+                                        editor.putInt("stars", getStars() - packs[i].cost());
+                                        editor.apply();
+                                    }
+                                } else {
+                                    editor.putString("pack", packs[i].getName());
                                     editor.apply();
                                 }
-                            } else {
-                                editor.putString("pack", packs[i].getName());
-                                editor.apply();
                             }
                         }
-                    }
-                    for (int i = 0; i < themes.length; i++) {
-                        float lx = convert854(20) + i * (boxWidth + convert854(20));
-                        float ly = THEMES_HEIGHT + convert854(30);
+                        for (int i = 0; i < themes.length; i++) {
+                            float lx = convert854(20) + i * (boxWidth + convert854(20)) - getThemeScroll();
+                            float ly = THEMES_HEIGHT + convert854(30);
 
-                        if (X > lx && X < lx+boxWidth && Y > ly && Y < ly+boxWidth) {
-                            if (!ownsTheme(i)) {
-                                if (getStars() >= themes[i].cost()) {
-                                    editor.putBoolean("owns_theme_"+i, true);
-                                    editor.putInt("stars", getStars()-themes[i].cost());
+                            if (X > lx && X < lx + boxWidth && Y > ly && Y < ly + boxWidth) {
+                                if (!ownsTheme(i)) {
+                                    if (getStars() >= themes[i].cost()) {
+                                        editor.putBoolean("owns_theme_" + i, true);
+                                        editor.putInt("stars", getStars() - themes[i].cost());
+                                        editor.apply();
+                                    }
+                                } else {
+                                    editor.putInt("theme", i);
                                     editor.apply();
                                 }
-                            } else {
-                                editor.putInt("theme", i);
-                                editor.apply();
                             }
                         }
                     }
@@ -934,6 +979,10 @@ public class MainActivity extends AppCompatActivity {
 
     private int getThemeID() {
         return sharedPref.getInt("theme", 0);
+    }
+
+    private float getThemeScroll() {
+        return sharedPref.getFloat("theme_scroll", 0);
     }
 
     private boolean ownsPack(String p) {
