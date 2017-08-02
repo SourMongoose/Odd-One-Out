@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
     private static final float TARGET_FPS_HEIGHT = 175;
     private static final float SHOW_1V1_HEIGHT = 350;
     //shop
+    private static final float BOX_WIDTH = 95;
     private static final float ICON_PACKS_HEIGHT = 175;
     private Pack[] packs = {new Pack("default"), new Pack("letter"), new Pack("fourths")};
     private static final float THEMES_HEIGHT = 375;
@@ -284,11 +285,11 @@ public class MainActivity extends AppCompatActivity {
 
                                 //packs
                                 canvas.drawText("icon packs:", convert854(20), convert854(ICON_PACKS_HEIGHT), categoryText);
-                                float boxWidth = (w()-5*convert854(20))/4;
+                                float boxWidth = convert854(BOX_WIDTH);
                                 costText.setTextSize(boxWidth/3.5f);
                                 for (int i = 0; i < packs.length; i++) {
                                     float lx = convert854(20) + i * (boxWidth + convert854(20));
-                                    float ly = ICON_PACKS_HEIGHT + convert854(30);
+                                    float ly = convert854(ICON_PACKS_HEIGHT + 30);
                                     if (getPack().equals(packs[i].getName())) canvas.drawRect(lx, ly, lx+boxWidth, ly+boxWidth, border);
                                     packs[i].drawPack(canvas, lx+boxWidth/2, ly+boxWidth/2, boxWidth-convert854(40), themes[getThemeID()]);
 
@@ -304,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawText("color themes:", convert854(20), convert854(THEMES_HEIGHT), categoryText);
                                 for (int i = 0; i < themes.length; i++) {
                                     float lx = convert854(20) + i * (boxWidth + convert854(20)) - getThemeScroll();
-                                    float ly = THEMES_HEIGHT + convert854(30);
+                                    float ly = convert854(THEMES_HEIGHT + 30);
                                     if (getThemeID() == i) canvas.drawRect(lx, ly, lx+boxWidth, ly+boxWidth, border);
                                     themes[i].drawTheme(canvas, lx+boxWidth/2, ly+boxWidth/2, boxWidth-convert854(40));
 
@@ -319,9 +320,9 @@ public class MainActivity extends AppCompatActivity {
                                 float shownWidth = w() - convert854(40),
                                         totalWidth = themes.length * (boxWidth + convert854(20)) - convert854(20);
                                 canvas.drawRect(convert854(20) + getThemeScroll() / totalWidth * shownWidth,
-                                        THEMES_HEIGHT + boxWidth + convert854(50),
+                                        convert854(THEMES_HEIGHT) + boxWidth + convert854(50),
                                         convert854(20) + (getThemeScroll()+shownWidth) / totalWidth * shownWidth,
-                                        THEMES_HEIGHT + boxWidth + convert854(60),
+                                        convert854(THEMES_HEIGHT) + boxWidth + convert854(60),
                                         newPaint(themes[getThemeID()].convertColor(Color.rgb(128,128,128))));
 
                                 //back button
@@ -792,8 +793,8 @@ public class MainActivity extends AppCompatActivity {
                 downY = moveY = Y;
                 scrolled = false;
             } else if (action == MotionEvent.ACTION_MOVE) {
-                float boxWidth = (w() - 5 * convert854(20)) / 4;
-                float ly = THEMES_HEIGHT + convert854(30);
+                float boxWidth = convert854(BOX_WIDTH);
+                float ly = convert854(THEMES_HEIGHT + 30);
 
                 if (downY > ly && downY < ly+boxWidth) {
                     float shownWidth = w() - convert854(40),
@@ -818,10 +819,10 @@ public class MainActivity extends AppCompatActivity {
                     menu = previousMenu;
                 } else {
                     if (!scrolled) {
-                        float boxWidth = (w() - 5 * convert854(20)) / 4;
+                        float boxWidth = convert854(BOX_WIDTH);
                         for (int i = 0; i < packs.length; i++) {
                             float lx = convert854(20) + i * (boxWidth + convert854(20));
-                            float ly = ICON_PACKS_HEIGHT + convert854(30);
+                            float ly = convert854(ICON_PACKS_HEIGHT + 30);
 
                             if (X > lx && X < lx + boxWidth && Y > ly && Y < ly + boxWidth) {
                                 if (!ownsPack(packs[i].getName())) {
@@ -838,7 +839,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         for (int i = 0; i < themes.length; i++) {
                             float lx = convert854(20) + i * (boxWidth + convert854(20)) - getThemeScroll();
-                            float ly = THEMES_HEIGHT + convert854(30);
+                            float ly = convert854(THEMES_HEIGHT + 30);
 
                             if (X > lx && X < lx + boxWidth && Y > ly && Y < ly + boxWidth) {
                                 if (!ownsTheme(i)) {
