@@ -42,18 +42,18 @@ class Icon {
     }
 
     //draws the icon within a square of center (x,y) and side length w
-    void drawShape(Canvas c, float x, float y, float w, boolean inverted) {
+    void drawShape(Canvas c, float x, float y, float w, Theme t) {
         w /= 2;
         
         float strokeWidth = c.getWidth()/240;
 
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
-        p.setColor(inverted ? Color.WHITE : Color.BLACK);
+        p.setColor(t.getC2());
         p.setStrokeWidth(strokeWidth);
         p.setStyle(Paint.Style.STROKE);
 
         Paint p2 = new Paint(Paint.ANTI_ALIAS_FLAG);
-        p2.setColor(inverted ? Color.WHITE : Color.BLACK);
+        p2.setColor(t.getC2());
 
         c.save();
         c.translate(x, y);
@@ -462,13 +462,13 @@ class Icon {
             for (int i = 0; i < 4; i++) {
                 switch(s.charAt(i)) {
                     case '0':
-                        fill.setColor(inverted ? Color.BLACK : Color.WHITE);
+                        fill.setColor(t.getC1());
                         break;
                     case '1':
-                        fill.setColor(Color.rgb(128, 128, 128));
+                        fill.setColor(t.convertColor(Color.rgb(128, 128, 128)));
                         break;
                     case '2':
-                        fill.setColor(inverted ? Color.WHITE : Color.BLACK);
+                        fill.setColor(t.getC2());
                 }
 
                 int angle = -180 + i*90;
