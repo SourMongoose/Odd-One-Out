@@ -171,15 +171,11 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawText("start", w()/2-startAnimation/(getTargetFPS()*2/3f)*w(), convert854(632), title);
                                 canvas.drawText("how to play", w()/2-startAnimation/(getTargetFPS()*2/3f)*w(), convert854(725), title);
 
+                                int alpha = (int)(255 - 255*Math.min(1, startAnimation/(getTargetFPS()*2/3f)));
                                 //settings icon
-                                drawGear(w()-40, 40, 20);
+                                drawGear(w()-40, 40, 20, alpha);
                                 //shop
-                                drawCart(40, 40, 20);
-
-                                Paint cover = newPaint(themes[getThemeID()].getC1());
-                                cover.setAlpha((int)(255*Math.min(1, startAnimation/(getTargetFPS()*2/3f))));
-                                canvas.drawRect(18, 18, 62, 62, cover);
-                                canvas.drawRect(w()-62, 18, w()-18, 62, cover);
+                                drawCart(40, 40, 20, alpha);
 
                                 if (startAnimation > 0) startAnimation--;
                             } else if (menu.equals("howtoplay")) {
@@ -629,15 +625,21 @@ public class MainActivity extends AppCompatActivity {
                                 p.setTextAlign(Paint.Align.CENTER);
                                 p.setTextSize(30);
 
+                                //fade-in effect
+                                int alpha = (int) (255f * Math.min(gameoverFrames, getTargetFPS()) / getTargetFPS());
+                                p.setAlpha(alpha);
+
                                 //new high score?
                                 if (isHighScore) {
                                     Paint bannerText = newPaint(themes[getThemeID()].getC2());
                                     bannerText.setTextAlign(Paint.Align.CENTER);
                                     bannerText.setTextSize(50);
+                                    bannerText.setAlpha(alpha);
                                     canvas.drawText("NEW HIGH", w()/2, h()/4-25, bannerText);
                                     canvas.drawText("SCORE!", w()/2, h()/4+25, bannerText);
 
                                     Paint border = newPaint(themes[getThemeID()].getC2());
+                                    border.setAlpha(alpha);
                                     for (int i = -100; i < w()+100; i += 50) {
                                         canvas.drawCircle(i-((float)gameoverFrames/getTargetFPS()*100%50), h()/4-80, 5, border);
                                         canvas.drawCircle(i+((float)gameoverFrames/getTargetFPS()*100%50), h()/4+45, 5, border);
@@ -659,13 +661,9 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawText("to continue", w()/2, h()*3/4+30, p);
 
                                 //settings
-                                drawGear(w()-40, 40, 20);
+                                drawGear(w()-40, 40, 20, alpha);
                                 //shop
-                                drawCart(40, 40, 20);
-
-                                //fade-in effect (for 1 sec)
-                                int alpha = (int) (255 - 255f * Math.min(gameoverFrames, getTargetFPS()) / getTargetFPS());
-                                canvas.drawRect(-5, -5, w()+5, h()+5, newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,255,255,255))));
+                                drawCart(40, 40, 20, alpha);
 
                                 //display row
                                 for (int i = 0; i < row.length; i++) {
@@ -683,6 +681,10 @@ public class MainActivity extends AppCompatActivity {
                                 p.setTextAlign(Paint.Align.CENTER);
                                 p.setTextSize(70);
 
+                                //fade-in effect (for 1 sec)
+                                int alpha = (int) (255f * Math.min(gameoverFrames, getTargetFPS()) / getTargetFPS());
+                                p.setAlpha(alpha);
+
                                 //display winner
                                 String winner = p1_score > p2_score ? "P1 wins!" : p2_score > p1_score ? "P2 wins!" : "It's a tie!";
                                 canvas.drawText(winner, w()/2, h()/4, p);
@@ -699,13 +701,9 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawText("to continue", w()/2, h()*3/4+30, p);
 
                                 //settings
-                                drawGear(w()-40, 40, 20);
+                                drawGear(w()-40, 40, 20, alpha);
                                 //shop
-                                drawCart(40, 40, 20);
-
-                                //fade-in effect (for 1 sec)
-                                int alpha = (int) (255 - 255f * Math.min(gameoverFrames, getTargetFPS()) / getTargetFPS());
-                                canvas.drawRect(-5, -5, w()+5, h()+5, newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,255,255,255))));
+                                drawCart(40, 40, 20, alpha);
 
                                 gameoverFrames++;
                             }
@@ -1093,10 +1091,11 @@ public class MainActivity extends AppCompatActivity {
         canvas.drawText("P2", w()*3/4, playerHeight, playerText);
     }
 
-    private void drawGear(float x, float y, float w) {
+    private void drawGear(float x, float y, float w, int alpha) {
         Paint p = newPaint(themes[getThemeID()].getC2());
         p.setStrokeWidth(convert854(2));
         p.setStyle(Paint.Style.STROKE);
+        p.setAlpha(alpha);
 
         for (float angle = 0; angle < 5.5/3*Math.PI; angle += Math.PI/3) {
             canvas.drawLine(x+w*3/4*(float)Math.cos(angle+Math.PI/18), y-w*3/4*(float)Math.sin(angle+Math.PI/18),
@@ -1123,10 +1122,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void drawCart(float x, float y, float w) {
+    private void drawCart(float x, float y, float w, int alpha) {
         Paint p = newPaint(themes[getThemeID()].getC2());
         p.setStrokeWidth(convert854(2));
         p.setStyle(Paint.Style.STROKE);
+        p.setAlpha(alpha);
 
         canvas.drawLine(x-w, y-w/2, x-w*.6f, y-w/2, p);
         canvas.drawLine(x-w*.6f, y-w/2, x-w*.2f, y+w/3, p);
