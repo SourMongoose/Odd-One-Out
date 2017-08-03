@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String previousPack;
 
+    private Background background;
+
     //1P
     private long score;
     private boolean isHighScore;
@@ -139,6 +141,8 @@ public class MainActivity extends AppCompatActivity {
         millisecondsPerFrame = (long)1e3 / getTargetFPS();
         startAnimation = getTargetFPS()*8/3;
 
+        background = new Background(getBackground());
+
         spinnaker = Typeface.createFromAsset(getAssets(), "fonts/Spinnaker-Regular.ttf");
 
         final Handler handler = new Handler();
@@ -153,8 +157,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             //background
-                            Background curr = new Background(getBackground());
-                            curr.drawBackground(canvas, themes[getThemeID()]);
+                            background.drawBackground(canvas, themes[getThemeID()], getTargetFPS());
 
                             if (menu.equals("start")) {
                                 Paint title = newPaint(themes[getThemeID()].getC2());
@@ -175,7 +178,8 @@ public class MainActivity extends AppCompatActivity {
 
                                 Paint cover = newPaint(themes[getThemeID()].getC1());
                                 cover.setAlpha((int)(255*Math.min(1, startAnimation/(getTargetFPS()*2/3f))));
-                                canvas.drawRect(0, 0, w(), 80, cover);
+                                canvas.drawRect(18, 18, 62, 62, cover);
+                                canvas.drawRect(w()-62, 18, w()-18, 62, cover);
 
                                 if (startAnimation > 0) startAnimation--;
                             } else if (menu.equals("howtoplay")) {
@@ -373,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
                                 if (!paused) {
                                     //show current column
                                     canvas.drawRect(column * w()/4, 0, (column + 1) * w()/4, h(),
-                                            newPaint(themes[getThemeID()].convertColor(Color.rgb(230,230,230))));
+                                            newPaint(themes[getThemeID()].convertColor(Color.argb(30,0,0,0))));
                                     //dividing lines
                                     for (int i = 0; i < 3; i++) {
                                         float x = w()/4 + i * w()/4;
@@ -468,9 +472,9 @@ public class MainActivity extends AppCompatActivity {
                                     if (p1_ready && p2_ready) {
                                         //show current columns
                                         canvas.drawRect(p1_column * w()/4, h()/2, (p1_column + 1) * w()/4, h(),
-                                                newPaint(themes[getThemeID()].convertColor(Color.rgb(230,230,230))));
+                                                newPaint(themes[getThemeID()].convertColor(Color.argb(30,0,0,0))));
                                         canvas.drawRect((3-p2_column) * w()/4, 0, (3-p2_column + 1) * w()/4, h()/2,
-                                                newPaint(themes[getThemeID()].convertColor(Color.rgb(230,230,230))));
+                                                newPaint(themes[getThemeID()].convertColor(Color.argb(30,0,0,0))));
                                         //dividing lines
                                         for (int i = 0; i < 3; i++) {
                                             float x = w()/4 + i * w()/4;
@@ -547,7 +551,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 //show current column
                                 canvas.drawRect(column * w()/4, 0, (column + 1) * w()/4, h(),
-                                        newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,230,230,230))));
+                                        newPaint(themes[getThemeID()].convertColor(Color.argb(alpha*30/255,0,0,0))));
                                 //dividing lines
                                 for (int i = 0; i < 3; i++) {
                                     float x = w()/4 + i * w()/4;
@@ -584,9 +588,9 @@ public class MainActivity extends AppCompatActivity {
 
                                     //show current columns
                                     canvas.drawRect(p1_column * w()/4, h()/2, (p1_column + 1) * w()/4, h(),
-                                            newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,230,230,230))));
+                                            newPaint(themes[getThemeID()].convertColor(Color.argb(alpha*30/255,0,0,0))));
                                     canvas.drawRect((3-p2_column) * w()/4, 0, (3-p2_column + 1) * w()/4, h()/2,
-                                            newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,230,230,230))));
+                                            newPaint(themes[getThemeID()].convertColor(Color.argb(alpha*30/255,0,0,0))));
                                     //dividing lines
                                     for (int i = 0; i < 3; i++) {
                                         float x = w()/4 + i * w()/4;
@@ -885,8 +889,11 @@ public class MainActivity extends AppCompatActivity {
                                         editor.apply();
                                     }
                                 } else {
-                                    editor.putString("background", backgrounds[i].getName());
-                                    editor.apply();
+                                    if (!backgrounds[i].getName().equals(getBackground())) {
+                                        editor.putString("background", backgrounds[i].getName());
+                                        editor.apply();
+                                        background = new Background(backgrounds[i].getName());
+                                    }
                                 }
                             }
                         }
