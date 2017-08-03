@@ -25,7 +25,7 @@ class Pack {
     }
 
     int cost() {
-        return 100;
+        return 200;
     }
 
     void drawPack(Canvas c, float x, float y, float w, Theme t) {

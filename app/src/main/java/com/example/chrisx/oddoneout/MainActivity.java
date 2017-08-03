@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String previousPack;
 
+    private Background background;
+
     //1P
     private long score;
     private boolean isHighScore;
@@ -101,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
             new Theme(Color.rgb(82,54,52), Color.WHITE),
             new Theme(Color.rgb(216,65,47), Color.WHITE)
     };
+    private static final float BACKGROUND_HEIGHT = 595;
+    private Background[] backgrounds = {new Background("default"), new Background("circles")};
 
     //screen touches
     private float downX, downY;
@@ -137,6 +141,8 @@ public class MainActivity extends AppCompatActivity {
         millisecondsPerFrame = (long)1e3 / getTargetFPS();
         startAnimation = getTargetFPS()*8/3;
 
+        background = new Background(getBackground());
+
         spinnaker = Typeface.createFromAsset(getAssets(), "fonts/Spinnaker-Regular.ttf");
 
         final Handler handler = new Handler();
@@ -151,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             //background
-                            canvas.drawColor(themes[getThemeID()].getC1());
+                            background.drawBackground(canvas, themes[getThemeID()], getTargetFPS());
 
                             if (menu.equals("start")) {
                                 Paint title = newPaint(themes[getThemeID()].getC2());
@@ -165,14 +171,11 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawText("start", w()/2-startAnimation/(getTargetFPS()*2/3f)*w(), convert854(632), title);
                                 canvas.drawText("how to play", w()/2-startAnimation/(getTargetFPS()*2/3f)*w(), convert854(725), title);
 
+                                int alpha = (int)(255 - 255*Math.min(1, startAnimation/(getTargetFPS()*2/3f)));
                                 //settings icon
-                                drawGear(w()-40, 40, 20);
+                                drawGear(w()-40, 40, 20, alpha);
                                 //shop
-                                drawCart(40, 40, 20);
-
-                                Paint cover = newPaint(themes[getThemeID()].getC1());
-                                cover.setAlpha((int)(255*Math.min(1, startAnimation/(getTargetFPS()*2/3f))));
-                                canvas.drawRect(0, 0, w(), 80, cover);
+                                drawCart(40, 40, 20, alpha);
 
                                 if (startAnimation > 0) startAnimation--;
                             } else if (menu.equals("howtoplay")) {
@@ -320,10 +323,26 @@ public class MainActivity extends AppCompatActivity {
                                 float shownWidth = w() - convert854(40),
                                         totalWidth = themes.length * (boxWidth + convert854(20)) - convert854(20);
                                 canvas.drawRect(convert854(20) + getThemeScroll() / totalWidth * shownWidth,
-                                        convert854(THEMES_HEIGHT) + boxWidth + convert854(50),
+                                        convert854(THEMES_HEIGHT) + boxWidth + convert854(40),
                                         convert854(20) + (getThemeScroll()+shownWidth) / totalWidth * shownWidth,
-                                        convert854(THEMES_HEIGHT) + boxWidth + convert854(60),
+                                        convert854(THEMES_HEIGHT) + boxWidth + convert854(50),
                                         newPaint(themes[getThemeID()].convertColor(Color.rgb(128,128,128))));
+
+                                //background effects
+                                canvas.drawText("background FX:", convert854(20), convert854(BACKGROUND_HEIGHT), categoryText);
+                                for (int i = 0; i < backgrounds.length; i++) {
+                                    float lx = convert854(20) + i * (boxWidth + convert854(20));
+                                    float ly = convert854(BACKGROUND_HEIGHT + 30);
+                                    if (getBackground().equals(backgrounds[i].getName())) canvas.drawRect(lx, ly, lx+boxWidth, ly+boxWidth, border);
+                                    backgrounds[i].drawBackgroundIcon(canvas, lx+boxWidth/2, ly+boxWidth/2, boxWidth-convert854(40), themes[getThemeID()]);
+
+                                    //check if unlocked
+                                    if (!ownsBackground(backgrounds[i].getName())) {
+                                        canvas.drawRect(lx, ly, lx+boxWidth, ly+boxWidth, locked);
+                                        canvas.drawText(backgrounds[i].cost()+"", lx+boxWidth/2, ly+boxWidth*9/16, costText);
+                                        drawStar(lx+boxWidth/2, ly+boxWidth*3/4, boxWidth/8);
+                                    }
+                                }
 
                                 //back button
                                 Icon backButton = new Icon(9, 270);
@@ -354,7 +373,7 @@ public class MainActivity extends AppCompatActivity {
                                 if (!paused) {
                                     //show current column
                                     canvas.drawRect(column * w()/4, 0, (column + 1) * w()/4, h(),
-                                            newPaint(themes[getThemeID()].convertColor(Color.rgb(230,230,230))));
+                                            newPaint(themes[getThemeID()].convertColor(Color.argb(30,0,0,0))));
                                     //dividing lines
                                     for (int i = 0; i < 3; i++) {
                                         float x = w()/4 + i * w()/4;
@@ -449,9 +468,9 @@ public class MainActivity extends AppCompatActivity {
                                     if (p1_ready && p2_ready) {
                                         //show current columns
                                         canvas.drawRect(p1_column * w()/4, h()/2, (p1_column + 1) * w()/4, h(),
-                                                newPaint(themes[getThemeID()].convertColor(Color.rgb(230,230,230))));
+                                                newPaint(themes[getThemeID()].convertColor(Color.argb(30,0,0,0))));
                                         canvas.drawRect((3-p2_column) * w()/4, 0, (3-p2_column + 1) * w()/4, h()/2,
-                                                newPaint(themes[getThemeID()].convertColor(Color.rgb(230,230,230))));
+                                                newPaint(themes[getThemeID()].convertColor(Color.argb(30,0,0,0))));
                                         //dividing lines
                                         for (int i = 0; i < 3; i++) {
                                             float x = w()/4 + i * w()/4;
@@ -528,7 +547,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 //show current column
                                 canvas.drawRect(column * w()/4, 0, (column + 1) * w()/4, h(),
-                                        newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,230,230,230))));
+                                        newPaint(themes[getThemeID()].convertColor(Color.argb(alpha*30/255,0,0,0))));
                                 //dividing lines
                                 for (int i = 0; i < 3; i++) {
                                     float x = w()/4 + i * w()/4;
@@ -565,9 +584,9 @@ public class MainActivity extends AppCompatActivity {
 
                                     //show current columns
                                     canvas.drawRect(p1_column * w()/4, h()/2, (p1_column + 1) * w()/4, h(),
-                                            newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,230,230,230))));
+                                            newPaint(themes[getThemeID()].convertColor(Color.argb(alpha*30/255,0,0,0))));
                                     canvas.drawRect((3-p2_column) * w()/4, 0, (3-p2_column + 1) * w()/4, h()/2,
-                                            newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,230,230,230))));
+                                            newPaint(themes[getThemeID()].convertColor(Color.argb(alpha*30/255,0,0,0))));
                                     //dividing lines
                                     for (int i = 0; i < 3; i++) {
                                         float x = w()/4 + i * w()/4;
@@ -606,15 +625,21 @@ public class MainActivity extends AppCompatActivity {
                                 p.setTextAlign(Paint.Align.CENTER);
                                 p.setTextSize(30);
 
+                                //fade-in effect
+                                int alpha = (int) (255f * Math.min(gameoverFrames, getTargetFPS()) / getTargetFPS());
+                                p.setAlpha(alpha);
+
                                 //new high score?
                                 if (isHighScore) {
                                     Paint bannerText = newPaint(themes[getThemeID()].getC2());
                                     bannerText.setTextAlign(Paint.Align.CENTER);
                                     bannerText.setTextSize(50);
+                                    bannerText.setAlpha(alpha);
                                     canvas.drawText("NEW HIGH", w()/2, h()/4-25, bannerText);
                                     canvas.drawText("SCORE!", w()/2, h()/4+25, bannerText);
 
                                     Paint border = newPaint(themes[getThemeID()].getC2());
+                                    border.setAlpha(alpha);
                                     for (int i = -100; i < w()+100; i += 50) {
                                         canvas.drawCircle(i-((float)gameoverFrames/getTargetFPS()*100%50), h()/4-80, 5, border);
                                         canvas.drawCircle(i+((float)gameoverFrames/getTargetFPS()*100%50), h()/4+45, 5, border);
@@ -636,13 +661,9 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawText("to continue", w()/2, h()*3/4+30, p);
 
                                 //settings
-                                drawGear(w()-40, 40, 20);
+                                drawGear(w()-40, 40, 20, alpha);
                                 //shop
-                                drawCart(40, 40, 20);
-
-                                //fade-in effect (for 1 sec)
-                                int alpha = (int) (255 - 255f * Math.min(gameoverFrames, getTargetFPS()) / getTargetFPS());
-                                canvas.drawRect(-5, -5, w()+5, h()+5, newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,255,255,255))));
+                                drawCart(40, 40, 20, alpha);
 
                                 //display row
                                 for (int i = 0; i < row.length; i++) {
@@ -660,6 +681,10 @@ public class MainActivity extends AppCompatActivity {
                                 p.setTextAlign(Paint.Align.CENTER);
                                 p.setTextSize(70);
 
+                                //fade-in effect (for 1 sec)
+                                int alpha = (int) (255f * Math.min(gameoverFrames, getTargetFPS()) / getTargetFPS());
+                                p.setAlpha(alpha);
+
                                 //display winner
                                 String winner = p1_score > p2_score ? "P1 wins!" : p2_score > p1_score ? "P2 wins!" : "It's a tie!";
                                 canvas.drawText(winner, w()/2, h()/4, p);
@@ -676,13 +701,9 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawText("to continue", w()/2, h()*3/4+30, p);
 
                                 //settings
-                                drawGear(w()-40, 40, 20);
+                                drawGear(w()-40, 40, 20, alpha);
                                 //shop
-                                drawCart(40, 40, 20);
-
-                                //fade-in effect (for 1 sec)
-                                int alpha = (int) (255 - 255f * Math.min(gameoverFrames, getTargetFPS()) / getTargetFPS());
-                                canvas.drawRect(-5, -5, w()+5, h()+5, newPaint(themes[getThemeID()].convertColor(Color.argb(alpha,255,255,255))));
+                                drawCart(40, 40, 20, alpha);
 
                                 gameoverFrames++;
                             }
@@ -827,7 +848,7 @@ public class MainActivity extends AppCompatActivity {
                             if (X > lx && X < lx + boxWidth && Y > ly && Y < ly + boxWidth) {
                                 if (!ownsPack(packs[i].getName())) {
                                     if (getStars() >= packs[i].cost()) {
-                                        editor.putBoolean("owns_" + packs[i].getName(), true);
+                                        editor.putBoolean("owns_pack_" + packs[i].getName(), true);
                                         editor.putInt("stars", getStars() - packs[i].cost());
                                         editor.apply();
                                     }
@@ -851,6 +872,26 @@ public class MainActivity extends AppCompatActivity {
                                 } else {
                                     editor.putInt("theme", i);
                                     editor.apply();
+                                }
+                            }
+                        }
+                        for (int i = 0; i < backgrounds.length; i++) {
+                            float lx = convert854(20) + i * (boxWidth + convert854(20));
+                            float ly = convert854(BACKGROUND_HEIGHT + 30);
+
+                            if (X > lx && X < lx + boxWidth && Y > ly && Y < ly + boxWidth) {
+                                if (!ownsBackground(backgrounds[i].getName())) {
+                                    if (getStars() >= backgrounds[i].cost()) {
+                                        editor.putBoolean("owns_background_" + backgrounds[i].getName(), true);
+                                        editor.putInt("stars", getStars() - backgrounds[i].cost());
+                                        editor.apply();
+                                    }
+                                } else {
+                                    if (!backgrounds[i].getName().equals(getBackground())) {
+                                        editor.putString("background", backgrounds[i].getName());
+                                        editor.apply();
+                                        background = new Background(backgrounds[i].getName());
+                                    }
                                 }
                             }
                         }
@@ -982,16 +1023,24 @@ public class MainActivity extends AppCompatActivity {
         return sharedPref.getInt("theme", 0);
     }
 
+    private String getBackground() {
+        return sharedPref.getString("background", "default");
+    }
+
     private float getThemeScroll() {
         return sharedPref.getFloat("theme_scroll", 0);
     }
 
     private boolean ownsPack(String p) {
-        return p.equals("default") || sharedPref.getBoolean("owns_"+p, false);
+        return p.equals("default") || sharedPref.getBoolean("owns_pack_"+p, false);
     }
 
     private boolean ownsTheme(int id) {
         return id == 0 || sharedPref.getBoolean("owns_theme_"+id, false);
+    }
+
+    private boolean ownsBackground(String b) {
+        return b.equals("default") || sharedPref.getBoolean("owns_background_"+b, false);
     }
 
     private void draw2PScores() {
@@ -1042,10 +1091,11 @@ public class MainActivity extends AppCompatActivity {
         canvas.drawText("P2", w()*3/4, playerHeight, playerText);
     }
 
-    private void drawGear(float x, float y, float w) {
+    private void drawGear(float x, float y, float w, int alpha) {
         Paint p = newPaint(themes[getThemeID()].getC2());
         p.setStrokeWidth(convert854(2));
         p.setStyle(Paint.Style.STROKE);
+        p.setAlpha(alpha);
 
         for (float angle = 0; angle < 5.5/3*Math.PI; angle += Math.PI/3) {
             canvas.drawLine(x+w*3/4*(float)Math.cos(angle+Math.PI/18), y-w*3/4*(float)Math.sin(angle+Math.PI/18),
@@ -1072,10 +1122,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void drawCart(float x, float y, float w) {
+    private void drawCart(float x, float y, float w, int alpha) {
         Paint p = newPaint(themes[getThemeID()].getC2());
         p.setStrokeWidth(convert854(2));
         p.setStyle(Paint.Style.STROKE);
+        p.setAlpha(alpha);
 
         canvas.drawLine(x-w, y-w/2, x-w*.6f, y-w/2, p);
         canvas.drawLine(x-w*.6f, y-w/2, x-w*.2f, y+w/3, p);
