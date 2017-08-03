@@ -101,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
             new Theme(Color.rgb(82,54,52), Color.WHITE),
             new Theme(Color.rgb(216,65,47), Color.WHITE)
     };
+    private static final float BACKGROUND_HEIGHT = 595;
+    private Background[] backgrounds = {new Background("default"), new Background("circles")};
 
     //screen touches
     private float downX, downY;
@@ -151,7 +153,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             //background
-                            canvas.drawColor(themes[getThemeID()].getC1());
+                            Background curr = new Background(getBackground());
+                            curr.drawBackground(canvas, themes[getThemeID()]);
 
                             if (menu.equals("start")) {
                                 Paint title = newPaint(themes[getThemeID()].getC2());
@@ -320,10 +323,26 @@ public class MainActivity extends AppCompatActivity {
                                 float shownWidth = w() - convert854(40),
                                         totalWidth = themes.length * (boxWidth + convert854(20)) - convert854(20);
                                 canvas.drawRect(convert854(20) + getThemeScroll() / totalWidth * shownWidth,
-                                        convert854(THEMES_HEIGHT) + boxWidth + convert854(50),
+                                        convert854(THEMES_HEIGHT) + boxWidth + convert854(40),
                                         convert854(20) + (getThemeScroll()+shownWidth) / totalWidth * shownWidth,
-                                        convert854(THEMES_HEIGHT) + boxWidth + convert854(60),
+                                        convert854(THEMES_HEIGHT) + boxWidth + convert854(50),
                                         newPaint(themes[getThemeID()].convertColor(Color.rgb(128,128,128))));
+
+                                //background effects
+                                canvas.drawText("background FX:", convert854(20), convert854(BACKGROUND_HEIGHT), categoryText);
+                                for (int i = 0; i < backgrounds.length; i++) {
+                                    float lx = convert854(20) + i * (boxWidth + convert854(20));
+                                    float ly = convert854(BACKGROUND_HEIGHT + 30);
+                                    if (getBackground().equals(backgrounds[i].getName())) canvas.drawRect(lx, ly, lx+boxWidth, ly+boxWidth, border);
+                                    backgrounds[i].drawBackgroundIcon(canvas, lx+boxWidth/2, ly+boxWidth/2, boxWidth-convert854(40), themes[getThemeID()]);
+
+                                    //check if unlocked
+                                    if (!ownsBackground(backgrounds[i].getName())) {
+                                        canvas.drawRect(lx, ly, lx+boxWidth, ly+boxWidth, locked);
+                                        canvas.drawText(backgrounds[i].cost()+"", lx+boxWidth/2, ly+boxWidth*9/16, costText);
+                                        drawStar(lx+boxWidth/2, ly+boxWidth*3/4, boxWidth/8);
+                                    }
+                                }
 
                                 //back button
                                 Icon backButton = new Icon(9, 270);
@@ -827,7 +846,7 @@ public class MainActivity extends AppCompatActivity {
                             if (X > lx && X < lx + boxWidth && Y > ly && Y < ly + boxWidth) {
                                 if (!ownsPack(packs[i].getName())) {
                                     if (getStars() >= packs[i].cost()) {
-                                        editor.putBoolean("owns_" + packs[i].getName(), true);
+                                        editor.putBoolean("owns_pack_" + packs[i].getName(), true);
                                         editor.putInt("stars", getStars() - packs[i].cost());
                                         editor.apply();
                                     }
@@ -850,6 +869,23 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 } else {
                                     editor.putInt("theme", i);
+                                    editor.apply();
+                                }
+                            }
+                        }
+                        for (int i = 0; i < backgrounds.length; i++) {
+                            float lx = convert854(20) + i * (boxWidth + convert854(20));
+                            float ly = convert854(BACKGROUND_HEIGHT + 30);
+
+                            if (X > lx && X < lx + boxWidth && Y > ly && Y < ly + boxWidth) {
+                                if (!ownsBackground(backgrounds[i].getName())) {
+                                    if (getStars() >= backgrounds[i].cost()) {
+                                        editor.putBoolean("owns_background_" + backgrounds[i].getName(), true);
+                                        editor.putInt("stars", getStars() - backgrounds[i].cost());
+                                        editor.apply();
+                                    }
+                                } else {
+                                    editor.putString("background", backgrounds[i].getName());
                                     editor.apply();
                                 }
                             }
@@ -982,16 +1018,24 @@ public class MainActivity extends AppCompatActivity {
         return sharedPref.getInt("theme", 0);
     }
 
+    private String getBackground() {
+        return sharedPref.getString("background", "default");
+    }
+
     private float getThemeScroll() {
         return sharedPref.getFloat("theme_scroll", 0);
     }
 
     private boolean ownsPack(String p) {
-        return p.equals("default") || sharedPref.getBoolean("owns_"+p, false);
+        return p.equals("default") || sharedPref.getBoolean("owns_pack_"+p, false);
     }
 
     private boolean ownsTheme(int id) {
         return id == 0 || sharedPref.getBoolean("owns_theme_"+id, false);
+    }
+
+    private boolean ownsBackground(String b) {
+        return b.equals("default") || sharedPref.getBoolean("owns_background_"+b, false);
     }
 
     private void draw2PScores() {
