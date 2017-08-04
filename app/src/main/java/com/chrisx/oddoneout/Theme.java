@@ -1,4 +1,4 @@
-package com.example.chrisx.oddoneout;
+package com.chrisx.oddoneout;
 
 import android.graphics.Canvas;
 import android.graphics.Color;

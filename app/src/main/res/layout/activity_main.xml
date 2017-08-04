@@ -6,6 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/draw_area"
-    tools:context="com.example.chrisx.oddoneout.MainActivity">
+    tools:context="com.chrisx.oddoneout.MainActivity">
 
 </LinearLayout>

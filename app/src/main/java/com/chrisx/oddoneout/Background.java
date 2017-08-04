@@ -1,10 +1,9 @@
-package com.example.chrisx.oddoneout;
+package com.chrisx.oddoneout;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
 import java.util.ArrayList;
-import java.util.List;
 
 class Background {
     private static final float CIRCLE_FREQ = 1;
