@@ -2,7 +2,6 @@ package com.chrisx.oddoneout;
 
 /**
  * Organized in order of priority:
- * @TODO make 2P game over screen look better
  * @TODO update tutorial to make it look better
  * ...
  * @TODO extreme?
@@ -173,9 +172,9 @@ public class MainActivity extends AppCompatActivity {
 
                                 int alpha = (int)(255 - 255*Math.min(1, startAnimation/(getTargetFPS()*2/3f)));
                                 //settings icon
-                                drawGear(w()-40, 40, 20, alpha);
+                                drawGear(w()-w()/12, w()/12, w()/24, alpha);
                                 //shop
-                                drawCart(40, 40, 20, alpha);
+                                drawCart(w()/12, w()/12, w()/24, alpha);
 
                                 if (startAnimation > 0) startAnimation--;
                             } else if (menu.equals("howtoplay")) {
@@ -235,8 +234,8 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
 
-                                if (tutorialFrames < 3) canvas.drawText("Next", w()/2, h()-20, p);
-                                else canvas.drawText("Menu", w()/2, h()-20, p);
+                                if (tutorialFrames < 3) canvas.drawText("Next", w()/2, h()-convert854(20), p);
+                                else canvas.drawText("Menu", w()/2, h()-convert854(20), p);
                             } else if (menu.equals("settings")) {
                                 Paint titleText = newPaint(themes[getThemeID()].getC2());
                                 titleText.setTextAlign(Paint.Align.CENTER);
@@ -270,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 //back button
                                 Icon backButton = new Icon(9, 270);
-                                backButton.drawShape(canvas, 60, h()-40, 60, themes[getThemeID()]);
+                                backButton.drawShape(canvas, w()/8, h()-w()/12, w()/8, themes[getThemeID()]);
                             } else if (menu.equals("shop")) {
                                 Paint titleText = newPaint(themes[getThemeID()].getC2());
                                 titleText.setTextAlign(Paint.Align.CENTER);
@@ -349,11 +348,11 @@ public class MainActivity extends AppCompatActivity {
                                 backButton.drawShape(canvas, 60, h()-40, 60, themes[getThemeID()]);
 
                                 //show number of stars
-                                drawStar(w()-40, h()-40, 20);
+                                drawStar(w()-w()/12, h()-w()/12, 20);
                                 Paint starCount = newPaint(themes[getThemeID()].getC2());
                                 starCount.setTextAlign(Paint.Align.RIGHT);
                                 starCount.setTextSize(convert854(40));
-                                canvas.drawText(getStars()+"", w()-70, h()-40-(starCount.ascent()+starCount.descent())/2, starCount);
+                                canvas.drawText(getStars()+"", w()-w()*7/48, h()-w()/12-(starCount.ascent()+starCount.descent())/2, starCount);
                             } else if (menu.equals("mode")){
                                 Paint modeText = newPaint(themes[getThemeID()].getC2());
                                 modeText.setTextAlign(Paint.Align.CENTER);
@@ -530,7 +529,7 @@ public class MainActivity extends AppCompatActivity {
                                             canvas.drawText("P1, tap here", w()/2, h()*3/4, readyText);
                                             canvas.drawText("when ready", w()/2, h()*3/4+convert854(30), readyText);
                                         }
-                                        cancel.drawShape(canvas, 40, h()-40, 30, themes[getThemeID()]);
+                                        cancel.drawShape(canvas, w()/12, h()-w()/12, w()/16, themes[getThemeID()]);
 
                                         flipScreen();
                                         if (p2_ready) canvas.drawText("Ready!", w()/2, h()*3/4, readyText);
@@ -538,7 +537,7 @@ public class MainActivity extends AppCompatActivity {
                                             canvas.drawText("P2, tap here", w()/2, h()*3/4, readyText);
                                             canvas.drawText("when ready", w()/2, h()*3/4+convert854(30), readyText);
                                         }
-                                        cancel.drawShape(canvas, 40, h()-40, 30, themes[getThemeID()]);
+                                        cancel.drawShape(canvas, w()/12, h()-w()/12, w()/16, themes[getThemeID()]);
                                         canvas.restore();
                                     }
                                 }
@@ -663,9 +662,9 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawText("to continue", w()/2, h()*3/4+convert854(30), p);
 
                                 //settings
-                                drawGear(w()-40, 40, 20, alpha);
+                                drawGear(w()-w()/12, w()/12, w()/24, alpha);
                                 //shop
-                                drawCart(40, 40, 20, alpha);
+                                drawCart(w()/12, w()/12, w()/24, alpha);
 
                                 //display row
                                 for (int i = 0; i < row.length; i++) {
@@ -704,9 +703,9 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawText("to continue", w()/2, h()*3/4+convert854(30), p);
 
                                 //settings
-                                drawGear(w()-40, 40, 20, alpha);
+                                drawGear(w()-w()/12, w()/12, w()/24, alpha);
                                 //shop
-                                drawCart(40, 40, 20, alpha);
+                                drawCart(w()/12, w()/12, w()/24, alpha);
 
                                 gameoverFrames++;
                             }
@@ -773,26 +772,26 @@ public class MainActivity extends AppCompatActivity {
                     tutorialFrames = 0;
                 }
                 //settings
-                else if (X > w() - 80 && Y < 80) {
+                else if (X > w() - w()/6 && Y < w()/6) {
                     previousMenu = menu;
                     menu = "settings";
                 }
                 //shop
-                else if (X < 80 && Y < 80) {
+                else if (X < w()/6 && Y < w()/6) {
                     previousMenu = menu;
                     menu = "shop";
                 }
             }
         } else if (menu.equals("howtoplay")) {
             if (action == MotionEvent.ACTION_UP) {
-                if (Y > h() - 80) {
+                if (Y > h() - w()/6) {
                     if (tutorialFrames < 3) tutorialFrames++;
                     else menu = "start";
                 }
             }
         } else if (menu.equals("settings")) {
             if (action == MotionEvent.ACTION_UP) {
-                if (X < 120 && Y > h() - 80) {
+                if (X < w()/4 && Y > h() - w()/6) {
                     menu = previousMenu;
                 }
             }
@@ -847,7 +846,7 @@ public class MainActivity extends AppCompatActivity {
                 moveY = Y;
                 if (Math.abs(X - downX) + Math.abs(Y - downY) > convert854(40)) scrolled = true;
             } else if (action == MotionEvent.ACTION_UP) {
-                if (X < 120 && Y > h() - 80) {
+                if (X < w()/4 && Y > h() - w()/6) {
                     menu = previousMenu;
                 } else {
                     if (!scrolled) {
@@ -938,7 +937,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
                         //if either player presses X
-                        if ((X < 80 && Y > h()-80) || (X > w()-80 && Y < 80)) {
+                        if ((X < w()/6 && Y > h()-w()/6) || (X > w()-w()/6 && Y < w()/6)) {
                             if (gamesPlayed == 0) menu = "start";
                             else {
                                 menu = "2P_gameover";
@@ -964,11 +963,11 @@ public class MainActivity extends AppCompatActivity {
             }
         } else if (menu.equals("gameover") || menu.equals("2P_gameover")) {
             if (action == MotionEvent.ACTION_UP && gameoverFrames > getTargetFPS()) {
-                if (X > w() - 80 && Y < 80) {
+                if (X > w() - w()/6 && Y < w()/6) {
                     //settings
                     previousMenu = menu;
                     menu = "settings";
-                } else if (X < 80 && Y < 80) {
+                } else if (X < w()/6 && Y < w()/6) {
                     //shop
                     previousMenu = menu;
                     menu = "shop";
