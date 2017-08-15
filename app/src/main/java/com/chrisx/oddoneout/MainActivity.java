@@ -798,10 +798,18 @@ public class MainActivity extends AppCompatActivity {
             }
             if (action == MotionEvent.ACTION_DOWN) {
                 if (Y > convert854(TARGET_FPS_HEIGHT+30) && Y < convert854(TARGET_FPS_HEIGHT+90)) {
+                    int previousFPS = getTargetFPS();
+
                     if (X < w()/4) editor.putInt("target_fps", 30);
                     else if (X < w()*2/4) editor.putInt("target_fps", 45);
                     else if (X < w()*3/4) editor.putInt("target_fps", 60);
                     editor.apply();
+
+                    if (previousFPS != getTargetFPS() && previousMenu.equals("gameover")) {
+                        for (Icon i : row) {
+                            i.setRotateSpeed(i.getRotateSpeed() * previousFPS / getTargetFPS());
+                        }
+                    }
 
                     nanosecondsPerFrame = (long)1e9 / getTargetFPS();
                     millisecondsPerFrame = (long)1e3 / getTargetFPS();

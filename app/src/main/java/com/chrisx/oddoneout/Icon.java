@@ -41,6 +41,14 @@ class Icon {
         setAngle((this.angle + angle + 360) % 360);
     }
 
+    float getRotateSpeed() {
+        return rotateSpeed;
+    }
+
+    void setRotateSpeed(float speed) {
+        rotateSpeed = speed;
+    }
+
     //draws the icon within a square of center (x,y) and side length w
     void drawShape(Canvas c, float x, float y, float w, Theme t) {
         w /= 2;
