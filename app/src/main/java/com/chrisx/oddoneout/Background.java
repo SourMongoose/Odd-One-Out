@@ -22,7 +22,7 @@ class Background {
     }
 
     int cost() {
-        return 100;
+        return 50;
     }
 
     void drawBackgroundIcon(Canvas c, float x, float y, float w, Theme t) {

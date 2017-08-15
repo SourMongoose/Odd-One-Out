@@ -23,7 +23,7 @@ class Theme {
     }
 
     int cost() {
-        return 50;
+        return 25;
     }
 
     int convertColor(int c) {

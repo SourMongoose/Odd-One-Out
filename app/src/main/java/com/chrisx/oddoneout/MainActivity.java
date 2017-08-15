@@ -623,7 +623,7 @@ public class MainActivity extends AppCompatActivity {
                             } else if (menu.equals("gameover")) {
                                 Paint p = newPaint(themes[getThemeID()].getC2());
                                 p.setTextAlign(Paint.Align.CENTER);
-                                p.setTextSize(30);
+                                p.setTextSize(convert854(30));
 
                                 //fade-in effect
                                 int alpha = (int) (255f * Math.min(gameoverFrames, getTargetFPS()) / getTargetFPS());
@@ -633,32 +633,34 @@ public class MainActivity extends AppCompatActivity {
                                 if (isHighScore) {
                                     Paint bannerText = newPaint(themes[getThemeID()].getC2());
                                     bannerText.setTextAlign(Paint.Align.CENTER);
-                                    bannerText.setTextSize(50);
+                                    bannerText.setTextSize(convert854(50));
                                     bannerText.setAlpha(alpha);
-                                    canvas.drawText("NEW HIGH", w()/2, h()/4-25, bannerText);
-                                    canvas.drawText("SCORE!", w()/2, h()/4+25, bannerText);
+                                    canvas.drawText("NEW HIGH", w()/2, h()/4-convert854(25), bannerText);
+                                    canvas.drawText("SCORE!", w()/2, h()/4+convert854(25), bannerText);
 
                                     Paint border = newPaint(themes[getThemeID()].getC2());
                                     border.setAlpha(alpha);
                                     for (int i = -100; i < w()+100; i += 50) {
-                                        canvas.drawCircle(i-((float)gameoverFrames/getTargetFPS()*100%50), h()/4-80, 5, border);
-                                        canvas.drawCircle(i+((float)gameoverFrames/getTargetFPS()*100%50), h()/4+45, 5, border);
+                                        canvas.drawCircle(i-((float)gameoverFrames/getTargetFPS()*100%50),
+                                                h()/4-convert854(80), 5, border);
+                                        canvas.drawCircle(i+((float)gameoverFrames/getTargetFPS()*100%50),
+                                                h()/4+convert854(45), 5, border);
                                     }
                                 }
 
                                 //final score/high score
-                                canvas.drawText("You scored", w()/2, h()/2-75, p);
-                                if (isHighScore) canvas.drawText("Previous high", w()/2, h()/2+40, p);
-                                else canvas.drawText("High score", w()/2, h()/2+40, p);
-                                p.setTextSize(70);
-                                canvas.drawText(score+"", w()/2, h()/2-5, p);
-                                if (isHighScore) canvas.drawText(previousHigh+"", w()/2, h()/2+110, p);
-                                else canvas.drawText(getHighScore(previousPack)+"", w()/2, h()/2+110, p);
+                                canvas.drawText("You scored", w()/2, h()/2-convert854(75), p);
+                                if (isHighScore) canvas.drawText("Previous high", w()/2, h()/2+convert854(40), p);
+                                else canvas.drawText("High score", w()/2, h()/2+convert854(40), p);
+                                p.setTextSize(convert854(70));
+                                canvas.drawText(score+"", w()/2, h()/2-convert854(5), p);
+                                if (isHighScore) canvas.drawText(previousHigh+"", w()/2, h()/2+convert854(110), p);
+                                else canvas.drawText(getHighScore(previousPack)+"", w()/2, h()/2+convert854(110), p);
 
-                                p.setTextSize(30);
+                                p.setTextSize(convert854(30));
                                 p.setAlpha((int)(255*Math.abs(Math.sin((float)gameoverFrames/getTargetFPS()*60*2/180*Math.PI))));
                                 canvas.drawText("tap anywhere", w()/2, h()*3/4, p);
-                                canvas.drawText("to continue", w()/2, h()*3/4+30, p);
+                                canvas.drawText("to continue", w()/2, h()*3/4+convert854(30), p);
 
                                 //settings
                                 drawGear(w()-40, 40, 20, alpha);
@@ -679,7 +681,7 @@ public class MainActivity extends AppCompatActivity {
                             } else if (menu.equals("2P_gameover")) {
                                 Paint p = newPaint(themes[getThemeID()].getC2());
                                 p.setTextAlign(Paint.Align.CENTER);
-                                p.setTextSize(70);
+                                p.setTextSize(convert854(70));
 
                                 //fade-in effect (for 1 sec)
                                 int alpha = (int) (255f * Math.min(gameoverFrames, getTargetFPS()) / getTargetFPS());
@@ -690,15 +692,16 @@ public class MainActivity extends AppCompatActivity {
                                 canvas.drawText(winner, w()/2, h()/4, p);
 
                                 //show final score
-                                p.setTextSize(100);
-                                canvas.drawText(p1_score+"", w()/4, h()/2, p);
-                                canvas.drawText("-", w()/2, h()/2, p);
-                                canvas.drawText(p2_score+"", w()*3/4, h()/2, p);
+                                p.setTextSize(convert854(100));
+                                float scoreHeight = h()/2 - (p.ascent() + p.descent())/2;
+                                canvas.drawText(p1_score+"", w()/4, scoreHeight, p);
+                                canvas.drawText("-", w()/2, scoreHeight, p);
+                                canvas.drawText(p2_score+"", w()*3/4, scoreHeight, p);
 
-                                p.setTextSize(30);
+                                p.setTextSize(convert854(30));
                                 p.setAlpha((int)(255*Math.abs(Math.sin((float)gameoverFrames/getTargetFPS()*60*2/180*Math.PI))));
                                 canvas.drawText("tap anywhere", w()/2, h()*3/4, p);
-                                canvas.drawText("to continue", w()/2, h()*3/4+30, p);
+                                canvas.drawText("to continue", w()/2, h()*3/4+convert854(30), p);
 
                                 //settings
                                 drawGear(w()-40, 40, 20, alpha);

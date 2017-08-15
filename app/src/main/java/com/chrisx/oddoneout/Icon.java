@@ -44,7 +44,7 @@ class Icon {
     //draws the icon within a square of center (x,y) and side length w
     void drawShape(Canvas c, float x, float y, float w, Theme t) {
         w /= 2;
-        
+
         float strokeWidth = c.getWidth()/240;
 
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -168,7 +168,7 @@ class Icon {
             c.drawLine(-w, -w, w, -w, p);
             c.drawLine(w, -w, 0, 0, p);
         }
-        /* 
+        /*
          * |
          * |_\
          */
@@ -214,7 +214,7 @@ class Icon {
             c.drawLine(-w, -w, w, -w, p);
             c.drawLine(-w, w, 0, 0, p);
         }
-        /* 
+        /*
          * |\
          * |__
          */
