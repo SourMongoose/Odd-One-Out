@@ -8,6 +8,7 @@ package com.chrisx.oddoneout;
  * @TODO global high scores?
  */
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -18,7 +19,6 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.Window;
@@ -27,7 +27,7 @@ import android.widget.LinearLayout;
 
 import com.chrisx.oddoneout.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private Bitmap bmp;
     private Canvas canvas;
     private LinearLayout ll;
